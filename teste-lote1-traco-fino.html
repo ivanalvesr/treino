@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teste de ilustrações</title>
+<style>
+:root{--bg:#0d0f12;--card:#1a1e25;--line:#333b47;--fg:#f4f7fa;--fg2:#cfd8e3;--accent:#4da3ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;padding:16px}
+h1{font-size:20px;margin:0 0 4px}
+p.hint{color:var(--fg2);font-size:14px;margin:0 0 18px}
+h2{font-size:15px;color:var(--fg2);font-weight:600;margin:26px 0 10px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.cell{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.cell svg{width:100%;height:auto;aspect-ratio:1;color:var(--fg)}
+.cell .nm{font-size:14px;font-weight:700;margin-top:6px}
+.thumbs{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start}
+.thumb{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px;width:104px;text-align:center}
+.thumb svg{width:72px;height:72px;color:var(--fg2)}
+.thumb .nm{font-size:11px;color:var(--fg2);margin-top:4px;line-height:1.2}
+.light{background:#f4f7fa;color:#12161c}
+.light .cell{background:#fff;border-color:#c9d2dd}
+.light .cell svg{color:#12161c}
+</style>
+</head>
+<body>
+<h1>Lote 1 — agachamentos, leg press e extensora</h1>
+<p class="hint">Mesma biblioteca que está no index.html. Em cima, tamanho ampliado (como no card expandido); embaixo, 72px (miniatura do card).</p>
+<svg id="illu-lib" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+
+<symbol id="ex-hack-squat" viewBox="0 0 200 200">
+  <title>Hack squat</title>
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- máquina: encosto inclinado (linha) + plataforma dos pés -->
+    <line x1="58" y1="78" x2="118" y2="182"/>
+    <line x1="106" y1="176" x2="178" y2="176"/>
+    <!-- posição inicial: pernas estendidas (carro no alto) -->
+    <g opacity="0.45">
+      <circle cx="61" cy="63" r="10"/>
+      <line x1="69" y1="76" x2="90" y2="112"/>
+      <line x1="90" y1="112" x2="136" y2="124"/>
+      <line x1="136" y1="124" x2="148" y2="170"/>
+      <line x1="69" y1="76" x2="84" y2="86"/>
+      <line x1="84" y1="86" x2="96" y2="78"/>
+      <rect x="-11" y="-4" width="22" height="8" rx="3" fill="currentColor" stroke="none" transform="translate(71 74) rotate(-30)"/>
+    </g>
+    <!-- posição final: agachado (carro embaixo) -->
+    <circle cx="83" cy="101" r="10"/>
+    <line x1="91" y1="114" x2="112" y2="150"/>
+    <line x1="112" y1="150" x2="151" y2="122"/>
+    <line x1="151" y1="122" x2="148" y2="170"/>
+    <line x1="140" y1="174" x2="162" y2="174"/>
+    <line x1="91" y1="114" x2="106" y2="124"/>
+    <line x1="106" y1="124" x2="118" y2="116"/>
+    <rect x="-11" y="-4" width="22" height="8" rx="3" fill="currentColor" stroke="none" transform="translate(93 112) rotate(-30)"/>
+    <!-- seta: descida ao longo do encosto -->
+    <path d="M150 44 Q178 56 182 92"/>
+    <path d="M172 84 L184 96 L190 80"/>
+  </g>
+</symbol>
+
+<symbol id="ex-agacho-smith" viewBox="0 0 200 200">
+  <title>Agachamento no Smith</title>
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- guias verticais da máquina + base -->
+    <line x1="52" y1="18" x2="52" y2="184"/>
+    <line x1="148" y1="18" x2="148" y2="184"/>
+    <line x1="34" y1="184" x2="166" y2="184"/>
+    <!-- posição inicial: em pé -->
+    <g opacity="0.45">
+      <circle cx="96" cy="32" r="10"/>
+      <line x1="96" y1="46" x2="96" y2="86"/>
+      <line x1="96" y1="86" x2="104" y2="130"/>
+      <line x1="104" y1="130" x2="108" y2="174"/>
+      <line x1="96" y1="46" x2="84" y2="56"/>
+      <line x1="84" y1="56" x2="74" y2="48"/>
+      <line x1="72" y1="46" x2="120" y2="46"/>
+      <rect x="66" y="36" width="8" height="20" fill="currentColor" stroke="none"/>
+      <rect x="118" y="36" width="8" height="20" fill="currentColor" stroke="none"/>
+    </g>
+    <!-- posição final: agachado -->
+    <circle cx="99" cy="80" r="10"/>
+    <line x1="96" y1="94" x2="86" y2="130"/>
+    <line x1="86" y1="130" x2="130" y2="140"/>
+    <line x1="130" y1="140" x2="108" y2="174"/>
+    <line x1="100" y1="178" x2="124" y2="178"/>
+    <line x1="96" y1="94" x2="84" y2="104"/>
+    <line x1="84" y1="104" x2="74" y2="96"/>
+    <line x1="72" y1="94" x2="120" y2="94"/>
+    <rect x="66" y="84" width="8" height="20" fill="currentColor" stroke="none"/>
+    <rect x="118" y="84" width="8" height="20" fill="currentColor" stroke="none"/>
+    <!-- seta: descida -->
+    <path d="M166 62 Q182 92 166 122"/>
+    <path d="M158 112 L166 124 L174 114"/>
+  </g>
+</symbol>
+
+<symbol id="ex-leg-press" viewBox="0 0 200 200">
+  <title>Leg press</title>
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- encosto, assento e trilho do carro -->
+    <line x1="62" y1="148" x2="24" y2="116"/>
+    <line x1="52" y1="150" x2="100" y2="150"/>
+    <line x1="110" y1="137" x2="194" y2="88"/>
+    <!-- tronco e cabeça (fixos) -->
+    <circle cx="23" cy="103" r="10"/>
+    <line x1="34" y1="112" x2="70" y2="140"/>
+    <line x1="34" y1="112" x2="46" y2="128"/>
+    <line x1="46" y1="128" x2="58" y2="138"/>
+    <!-- posição inicial: joelhos flexionados -->
+    <g opacity="0.45">
+      <line x1="70" y1="140" x2="76" y2="92"/>
+      <line x1="76" y1="92" x2="118" y2="116"/>
+      <rect x="-4" y="-16" width="8" height="32" fill="currentColor" stroke="none" transform="translate(118 116) rotate(-31)"/>
+    </g>
+    <!-- posição final: pernas estendidas -->
+    <line x1="70" y1="140" x2="112" y2="116"/>
+    <line x1="112" y1="116" x2="152" y2="92"/>
+    <rect x="-4" y="-16" width="8" height="32" fill="currentColor" stroke="none" transform="translate(152 92) rotate(-31)"/>
+    <!-- seta: empurrar -->
+    <path d="M112 62 Q146 40 174 42"/>
+    <path d="M164 34 L176 42 L164 52"/>
+  </g>
+</symbol>
+
+<symbol id="ex-extensora" viewBox="0 0 200 200">
+  <title>Cadeira extensora</title>
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- cadeira: encosto, assento, coluna e base -->
+    <line x1="44" y1="132" x2="32" y2="86"/>
+    <line x1="44" y1="132" x2="104" y2="132"/>
+    <line x1="104" y1="132" x2="104" y2="178"/>
+    <line x1="30" y1="182" x2="162" y2="182"/>
+    <!-- tronco e coxa (fixos) -->
+    <circle cx="65" cy="72" r="10"/>
+    <line x1="62" y1="86" x2="56" y2="126"/>
+    <line x1="56" y1="126" x2="104" y2="128"/>
+    <line x1="62" y1="86" x2="74" y2="102"/>
+    <line x1="74" y1="102" x2="84" y2="116"/>
+    <circle cx="104" cy="128" r="5"/>
+    <!-- posição inicial: perna pendente -->
+    <g opacity="0.45">
+      <line x1="104" y1="128" x2="110" y2="174"/>
+      <line x1="110" y1="174" x2="122" y2="178"/>
+      <rect x="96" y="170" width="28" height="8" rx="4" fill="currentColor" stroke="none"/>
+    </g>
+    <!-- posição final: perna estendida -->
+    <line x1="104" y1="128" x2="150" y2="124"/>
+    <line x1="150" y1="124" x2="160" y2="114"/>
+    <rect x="146" y="110" width="8" height="28" rx="4" fill="currentColor" stroke="none"/>
+    <!-- seta: extensão -->
+    <path d="M128 176 Q154 168 160 142"/>
+    <path d="M152 144 L160 132 L168 142"/>
+  </g>
+</symbol>
+
+</svg>
+<h2>Ampliado</h2>
+<div class="grid" id="big"></div>
+<h2>Miniatura 72px — o que aparece na lista</h2>
+<div class="thumbs" id="small"></div>
+<h2>Conferência em fundo claro (herança de currentColor)</h2>
+<div class="grid light" id="lightg" style="padding:12px;border-radius:12px"></div>
+<script>
+var syms = [].slice.call(document.querySelectorAll('#illu-lib symbol'));
+function cell(s, cls, tag){
+  var t = s.querySelector('title');
+  return '<div class="'+cls+'"><svg viewBox="0 0 200 200" role="img" aria-label="'+(t?t.textContent:s.id)+'"><use href="#'+s.id+'"/></svg>'+
+         '<div class="nm">'+(t?t.textContent:s.id)+'</div></div>';
+}
+document.getElementById('big').innerHTML    = syms.map(function(s){ return cell(s,'cell'); }).join('');
+document.getElementById('small').innerHTML  = syms.map(function(s){ return cell(s,'thumb'); }).join('');
+document.getElementById('lightg').innerHTML = syms.map(function(s){ return cell(s,'cell'); }).join('');
+document.title = syms.length + ' ilustrações';
+</script>
+</body>
+</html>

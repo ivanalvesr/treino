@@ -78,7 +78,7 @@ main{padding:12px 10px 0}
   padding:8px 12px;min-height:var(--tap);cursor:pointer;color:var(--fg2);
   text-align:left;font-size:14px;
 }
-.illu svg{width:72px;height:72px;flex:0 0 72px;color:var(--fg2)}
+.illu svg{width:88px;height:88px;flex:0 0 88px;color:var(--fg2)}
 .illu[data-open="1"]{flex-direction:column;align-items:center;gap:4px}
 .illu[data-open="1"] svg{width:min(240px,70vw);height:min(240px,70vw);flex:0 0 auto;color:var(--fg)}
 
@@ -151,10 +151,175 @@ main{padding:12px 10px 0}
 </head>
 <body>
 
-<!-- ===== BIBLIOTECA DE ILUSTRAÇÕES (entra na FASE 2) =====
-     Na Fase 2 os <symbol id="ex-..."> vêm para cá e os cards passam a
-     referenciá-los com <use>. Na Fase 1 o JS gera um placeholder. -->
-<svg id="illu-lib" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"></svg>
+<!-- ===================== BIBLIOTECA DE ILUSTRAÇÕES =====================
+     Um <symbol> por padrão de movimento, referenciado pelos cards com <use>.
+     Convenções, iguais em todos os desenhos:
+       - viewBox 0 0 200 200, chão/base em y=182
+       - corpo com volume, todo em currentColor:
+           cabeça  = círculo cheio r=11
+           pescoço = linha 10
+           tronco  = quadrilátero cheio (ombro mais largo que o quadril)
+           coxa 15 · perna 13 · braço 9 · pé/mão 9, pontas arredondadas
+       - equipamento SEMPRE em linha fina 4 sem preenchimento, para não
+         competir com o corpo: barra = linha com dois retângulos nas pontas,
+         banco/assento/trilho = linha, máquina = bloco simples, cabo = linha
+       - primeiro grupo, opacidade 0.35 = posição inicial
+         segundo grupo, opaco        = posição final
+         a seta (linha 4) aponta sempre de "inicial" para "final"
+       - ordem de desenho: equipamento, posição inicial, posição final
+     Exercícios repetidos entre os dias reutilizam o mesmo símbolo (ver o
+     mapa ILLU no script). ==================================================== -->
+<svg id="illu-lib" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+
+<symbol id="ex-hack-squat" viewBox="0 0 200 200">
+  <title>Hack squat</title>
+  <g fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <!-- máquina: encosto inclinado + plataforma dos pés -->
+    <g fill="none" stroke-width="4">
+      <line x1="58" y1="78" x2="118" y2="182"/>
+      <line x1="106" y1="176" x2="178" y2="176"/>
+    </g>
+    <!-- posição inicial: pernas estendidas -->
+    <g opacity="0.35">
+      <circle cx="61" cy="63" r="11"/>
+      <line x1="63" y1="69" x2="69" y2="76" stroke-width="10"/>
+      <path d="M58 82 L80 70 L99 107 L81 117 Z" stroke-width="5"/>
+      <line x1="90" y1="112" x2="136" y2="124" stroke-width="15"/>
+      <line x1="136" y1="124" x2="148" y2="170" stroke-width="13"/>
+      <line x1="69" y1="76" x2="84" y2="86" stroke-width="9"/>
+      <line x1="84" y1="86" x2="96" y2="78" stroke-width="9"/>
+      <rect x="-12" y="-5" width="24" height="10" rx="4" transform="translate(71 74) rotate(-30)"/>
+    </g>
+    <!-- posição final: agachado -->
+    <circle cx="83" cy="101" r="11"/>
+    <line x1="85" y1="107" x2="91" y2="114" stroke-width="10"/>
+    <path d="M80 120 L102 108 L121 145 L103 155 Z" stroke-width="5"/>
+    <line x1="112" y1="150" x2="151" y2="122" stroke-width="15"/>
+    <line x1="151" y1="122" x2="148" y2="170" stroke-width="13"/>
+    <line x1="140" y1="174" x2="162" y2="174" stroke-width="9"/>
+    <line x1="91" y1="114" x2="106" y2="124" stroke-width="9"/>
+    <line x1="106" y1="124" x2="118" y2="116" stroke-width="9"/>
+    <rect x="-12" y="-5" width="24" height="10" rx="4" transform="translate(93 112) rotate(-30)"/>
+    <!-- seta: descida -->
+    <g fill="none" stroke-width="4">
+      <path d="M150 44 Q178 56 182 92"/>
+      <path d="M172 84 L184 96 L190 80"/>
+    </g>
+  </g>
+</symbol>
+
+<symbol id="ex-agacho-smith" viewBox="0 0 200 200">
+  <title>Agachamento no Smith</title>
+  <g fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <!-- guias verticais + base -->
+    <g fill="none" stroke-width="4">
+      <line x1="52" y1="18" x2="52" y2="184"/>
+      <line x1="148" y1="18" x2="148" y2="184"/>
+      <line x1="34" y1="184" x2="166" y2="184"/>
+    </g>
+    <!-- posição inicial: em pé -->
+    <g opacity="0.35">
+      <circle cx="96" cy="30" r="11"/>
+      <line x1="96" y1="38" x2="96" y2="48" stroke-width="10"/>
+      <path d="M83 46 L109 46 L106 88 L86 88 Z" stroke-width="5"/>
+      <line x1="96" y1="88" x2="104" y2="130" stroke-width="15"/>
+      <line x1="104" y1="130" x2="108" y2="174" stroke-width="13"/>
+      <line x1="100" y1="178" x2="124" y2="178" stroke-width="9"/>
+      <line x1="94" y1="52" x2="84" y2="62" stroke-width="9"/>
+      <line x1="84" y1="62" x2="76" y2="50" stroke-width="9"/>
+      <line x1="70" y1="46" x2="122" y2="46" stroke-width="6" fill="none"/>
+      <rect x="64" y="34" width="10" height="24" rx="3"/>
+      <rect x="118" y="34" width="10" height="24" rx="3"/>
+    </g>
+    <!-- posição final: agachado -->
+    <circle cx="99" cy="78" r="11"/>
+    <line x1="98" y1="86" x2="96" y2="95" stroke-width="10"/>
+    <path d="M84 90 L108 98 L96 133 L76 127 Z" stroke-width="5"/>
+    <line x1="86" y1="130" x2="130" y2="140" stroke-width="15"/>
+    <line x1="130" y1="140" x2="108" y2="174" stroke-width="13"/>
+    <line x1="100" y1="178" x2="124" y2="178" stroke-width="9"/>
+    <line x1="94" y1="100" x2="84" y2="108" stroke-width="9"/>
+    <line x1="84" y1="108" x2="76" y2="98" stroke-width="9"/>
+    <line x1="70" y1="94" x2="122" y2="94" stroke-width="6" fill="none"/>
+    <rect x="64" y="82" width="10" height="24" rx="3"/>
+    <rect x="118" y="82" width="10" height="24" rx="3"/>
+    <!-- seta: descida -->
+    <g fill="none" stroke-width="4">
+      <path d="M166 62 Q182 92 166 122"/>
+      <path d="M158 112 L166 124 L174 114"/>
+    </g>
+  </g>
+</symbol>
+
+<symbol id="ex-leg-press" viewBox="0 0 200 200">
+  <title>Leg press</title>
+  <g fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <!-- encosto, assento e trilho do carro -->
+    <g fill="none" stroke-width="4">
+      <line x1="62" y1="152" x2="22" y2="118"/>
+      <line x1="52" y1="154" x2="100" y2="154"/>
+      <line x1="112" y1="140" x2="194" y2="92"/>
+    </g>
+    <!-- tronco e cabeça (fixos) -->
+    <circle cx="22" cy="101" r="11"/>
+    <line x1="27" y1="105" x2="35" y2="113" stroke-width="10"/>
+    <path d="M26 122 L42 102 L76 132 L64 148 Z" stroke-width="5"/>
+    <line x1="36" y1="114" x2="48" y2="130" stroke-width="9"/>
+    <line x1="48" y1="130" x2="60" y2="140" stroke-width="9"/>
+    <!-- posição inicial: joelhos flexionados -->
+    <g opacity="0.35">
+      <line x1="70" y1="140" x2="76" y2="92" stroke-width="15"/>
+      <line x1="76" y1="92" x2="118" y2="116" stroke-width="13"/>
+      <rect x="-5" y="-18" width="10" height="36" rx="3" transform="translate(120 118) rotate(-31)"/>
+    </g>
+    <!-- posição final: pernas estendidas -->
+    <line x1="70" y1="140" x2="112" y2="116" stroke-width="15"/>
+    <line x1="112" y1="116" x2="152" y2="92" stroke-width="13"/>
+    <line x1="152" y1="92" x2="161" y2="81" stroke-width="9"/>
+    <rect x="-5" y="-18" width="10" height="36" rx="3" transform="translate(156 96) rotate(-31)"/>
+    <!-- seta: empurrar -->
+    <g fill="none" stroke-width="4">
+      <path d="M112 62 Q146 40 174 42"/>
+      <path d="M164 34 L176 42 L164 52"/>
+    </g>
+  </g>
+</symbol>
+
+<symbol id="ex-extensora" viewBox="0 0 200 200">
+  <title>Cadeira extensora</title>
+  <g fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <!-- cadeira: encosto, assento, coluna e base -->
+    <g fill="none" stroke-width="4">
+      <line x1="44" y1="136" x2="32" y2="90"/>
+      <line x1="44" y1="136" x2="104" y2="136"/>
+      <line x1="104" y1="136" x2="104" y2="178"/>
+      <line x1="28" y1="182" x2="164" y2="182"/>
+    </g>
+    <!-- tronco, cabeça e coxa (fixos) -->
+    <circle cx="65" cy="66" r="11"/>
+    <line x1="64" y1="74" x2="62" y2="85" stroke-width="10"/>
+    <path d="M49 82 L75 86 L66 124 L46 120 Z" stroke-width="5"/>
+    <line x1="56" y1="122" x2="104" y2="124" stroke-width="15"/>
+    <line x1="64" y1="88" x2="76" y2="104" stroke-width="9"/>
+    <line x1="76" y1="104" x2="86" y2="118" stroke-width="9"/>
+    <!-- posição inicial: perna pendente -->
+    <g opacity="0.35">
+      <line x1="104" y1="124" x2="110" y2="170" stroke-width="13"/>
+      <line x1="110" y1="170" x2="124" y2="174" stroke-width="9"/>
+      <rect x="94" y="163" width="32" height="12" rx="5"/>
+    </g>
+    <!-- posição final: perna estendida -->
+    <line x1="104" y1="124" x2="150" y2="120" stroke-width="13"/>
+    <line x1="150" y1="120" x2="160" y2="108" stroke-width="9"/>
+    <rect x="143" y="105" width="12" height="32" rx="5"/>
+    <!-- seta: extensão -->
+    <g fill="none" stroke-width="4">
+      <path d="M128 172 Q154 164 160 138"/>
+      <path d="M152 140 L160 128 L168 140"/>
+    </g>
+  </g>
+</symbol>
+</svg>
 
 <header id="topbar">
   <div id="head">
@@ -244,6 +409,18 @@ var WORKOUTS = [
    null = descanso / cardio (abre a tela de descanso). */
 var SCHEDULE = { 1:"A1", 2:"B1", 3:"A2", 4:"B2", 5:null, 6:null, 0:null };
 
+/* Nome do exercício -> id do <symbol> da biblioteca no topo do documento.
+   Exercício sem entrada aqui (ou com symbol ainda não desenhado) cai
+   automaticamente no placeholder com o nome escrito dentro.
+   Dois exercícios podem apontar para o mesmo symbol quando o movimento é
+   o mesmo (ex.: cadeira extensora em A1 e B2). */
+var ILLU = {
+  "Hack squat":            "ex-hack-squat",
+  "Agachamento no Smith":  "ex-agacho-smith",
+  "Leg press":             "ex-leg-press",
+  "Cadeira extensora":     "ex-extensora"
+};
+
 /* ======================= FIM DO BLOCO DE DADOS ======================= */
 
 
@@ -326,7 +503,17 @@ function entry(s, exName, sets, i){
   return arr[i];
 }
 
-/* ---------------- ilustração: PLACEHOLDER da Fase 1 ---------------- */
+/* ---------------- ilustração ----------------
+   Se existe um <symbol> para o exercício, usa <use>; senão, desenha o
+   placeholder com o nome dentro (mesmo viewBox, mesmo tamanho na lista). */
+function illuSVG(name){
+  var id = ILLU[name];
+  if(id && document.getElementById(id)){
+    return '<svg viewBox="0 0 200 200" role="img" aria-label="'+esc(name)+'"><use href="#'+id+'"/></svg>';
+  }
+  return illuPlaceholder(name);
+}
+
 function wrapText(t, max){
   var words = String(t).split(" "), lines=[], cur="";
   for(var i=0;i<words.length;i++){
@@ -336,7 +523,7 @@ function wrapText(t, max){
   if(cur) lines.push(cur);
   return lines.slice(0,4);
 }
-function illuSVG(name){
+function illuPlaceholder(name){
   var lines = wrapText(name, 17);
   var y0 = 100 - (lines.length-1)*11;
   var tspans = lines.map(function(l,i){ return '<tspan x="100" y="'+(y0 + i*22)+'">'+esc(l)+'</tspan>'; }).join("");
