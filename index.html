@@ -74,6 +74,11 @@ main{padding:12px 10px 0}
 .pill.grp{background:#27303d;color:var(--accent)}
 .pill.rir{background:#3a2f16;color:var(--amber)}
 .pill.opc{background:transparent;color:var(--fg2);border:1px dashed var(--fg2);font-weight:700;letter-spacing:.3px}
+/* orientação de progressão (texto de personal): dica por exercício e ciclo de 15 dias */
+.ciclo{font-size:14px;color:var(--fg2);margin:-4px 2px 12px;line-height:1.35}
+.dica{margin-top:8px;padding:8px 10px;border-radius:8px;font-size:14px;line-height:1.35;background:var(--card2);color:var(--fg2)}
+.dica.subir{background:#3a2f16;color:var(--amber);font-weight:600}
+.dica.inicio{color:var(--fg)}
 /* exercício opcional: card com borda tracejada, título um tom abaixo */
 .card.opc{border-style:dashed}
 .card.opc .cname{color:var(--fg2)}
@@ -746,6 +751,51 @@ function lastFor(w, exName, setIdx, skipDate){
   return null;
 }
 
+/* ---------------------- progressão sugerida ----------------------
+   Regras de orientação para quem está começando (35 anos, sem histórico):
+   - Início: carga que permita o TOPO da faixa de reps sobrando ~3 (RIR 3).
+     Nas duas primeiras semanas a prioridade é técnica, não carga.
+   - Manter a carga até bater o topo da faixa E completar 15 dias nela.
+   - Aí subir: pernas +5 kg, peito/costas +2,5 kg, demais +2 kg, e voltar
+     para a BASE da faixa de reps (progressão dupla, em ciclos de 15 dias).
+   Tudo isso é sugestão em texto — a decisão continua sendo de quem treina. */
+function faixaReps(txt){ var m = String(txt).match(/(\d+)\D+(\d+)/); return m ? { base:+m[1], topo:+m[2] } : null; }
+function incremento(grp, nome){
+  var g = String(grp).toLowerCase(), n = String(nome||"").toLowerCase();
+  if(/halter/.test(n)) return 2;                       /* halteres sobem de 2 em 2 kg */
+  if(/quadr|poster|pantur|gl[uú]t/.test(g)) return 5;
+  if(/peito|costas/.test(g)) return 2.5;
+  return 2;
+}
+function fmtKg(n){ return String(Math.round(n*10)/10).replace(".", ","); }
+function numKg(s){ var v = parseFloat(String(s).replace(",", ".")); return isNaN(v) ? null : v; }
+function diasEntre(a, b){ return Math.round((new Date(b+"T00:00:00") - new Date(a+"T00:00:00")) / 86400000); }
+function progressao(w, x, sessoes){
+  var name = x[1], f = faixaReps(x[3]); if(!f) return null;
+  var list = (sessoes || allSess()).filter(function(s){ return s.w===w && s.d!==state.date && s.e[name]; });
+  function cargaDe(s){ var arr = s.e[name]; for(var i=0;i<arr.length;i++){ if(arr[i] && numKg(arr[i].l)!==null) return numKg(arr[i].l); } return null; }
+  var ult = null;
+  for(var i=0;i<list.length;i++){ if(cargaDe(list[i])!==null){ ult = list[i]; break; } }
+  if(!ult) return { tipo:"inicio", txt:"Início: escolha uma carga que permita "+f.topo+" reps sobrando 3. Nas duas primeiras semanas, técnica antes de carga." };
+  var L = cargaDe(ult), reps = 0;
+  ult.e[name].forEach(function(k){ var r = k && parseInt(k.r,10); if(r > reps) reps = r; });
+  var desde = ult.d;                                  /* sessões consecutivas na mesma carga */
+  for(var j=0;j<list.length;j++){ var c = cargaDe(list[j]); if(c===null) continue; if(c===L) desde = list[j].d; else break; }
+  var dias = diasEntre(desde, state.date), inc = incremento(x[0], x[1]);
+  if(reps >= f.topo && dias >= 15) return { tipo:"subir",  txt:dias+" dias em "+fmtKg(L)+" kg batendo "+f.topo+" reps: suba para "+fmtKg(L+inc)+" kg e volte para "+f.base+" reps." };
+  if(reps >= f.topo)               return { tipo:"manter", txt:"Você já faz "+f.topo+" reps com "+fmtKg(L)+" kg. Mantenha até completar 15 dias (faltam "+(15-dias)+"), depois suba para "+fmtKg(L+inc)+" kg." };
+  return { tipo:"reps", txt:"Mantenha "+fmtKg(L)+" kg e busque chegar a "+f.topo+" reps (última: "+(reps || "—")+")." };
+}
+/* dia do programa e próxima revisão de cargas (ciclos de 15 dias) */
+function cicloTxt(sessoes){
+  var primeira = null;
+  (sessoes || allSess()).forEach(function(s){ if(!primeira || s.d < primeira) primeira = s.d; });
+  if(!primeira || primeira > state.date) return "Dia 1 do programa · anote carga e reps de cada série; a cada 15 dias eu sugiro o ajuste.";
+  var dia = diasEntre(primeira, state.date) + 1, resto = (dia - 1) % 15, faltam = 15 - resto;
+  if(resto === 0 && dia > 1) return "Dia "+dia+" do programa · hoje é dia de revisão de cargas — veja a dica em cada exercício.";
+  return "Dia "+dia+" do programa · próxima revisão de cargas em "+faltam+" dia"+(faltam===1?"":"s")+".";
+}
+
 /* ---------------------- perfis ---------------------- */
 function perfis(){ try{ var v = JSON.parse(LS.get(PREFIX+"perfis")); return Array.isArray(v) ? v : []; }catch(e){ return []; } }
 function savePerfis(list){ LS.set(PREFIX+"perfis", JSON.stringify(list)); }
@@ -866,11 +916,13 @@ function renderProgress(){
 function renderWorkout(id){
   state.view = id;
   state.sess = ensureSess(id);
-  var wk = wkById(id);
-  var html = '<div class="sechead"><h1>'+esc(wk.nome)+' &middot; '+esc(wk.dia)+'</h1><div class="sub" id="sub"></div></div>';
+  var wk = wkById(id), sessoes = allSess();
+  var html = '<div class="sechead"><h1>'+esc(wk.nome)+' &middot; '+esc(wk.dia)+'</h1><div class="sub" id="sub"></div></div>'+
+    '<div class="ciclo">'+esc(cicloTxt(sessoes))+'</div>';
 
   wk.ex.forEach(function(x){
     var grp=x[0], name=x[1], sets=x[2], reps=x[3], rir=x[4], opc=!!x[5];
+    var faixa = faixaReps(reps), dica = progressao(id, x, sessoes);
     var arr = state.sess.e[name] || [];
     var allDone = true;
     for(var i=0;i<sets;i++){ if(!(arr[i] && arr[i].c)) allDone = false; }
@@ -881,7 +933,9 @@ function renderWorkout(id){
         '<span class="pill">'+sets+' &times; '+esc(reps)+'</span>'+
         '<span class="pill rir">RIR '+esc(rir)+'</span>'+
         (opc ? '<span class="pill opc">opcional</span>' : '')+
-      '</div></div>'+
+      '</div>'+
+      (dica ? '<div class="dica '+dica.tipo+'">'+esc(dica.txt)+'</div>' : '')+
+      '</div>'+
       '<button class="illu" data-open="0" data-illu="1" aria-expanded="false">'+
         illuSVG(name)+'<span class="cap">toque para ampliar</span>'+
       '</button><div class="sets">';
@@ -896,7 +950,7 @@ function renderWorkout(id){
       html += '<div class="setrow"><div class="setgrid">'+
           '<button class="chk" data-chk="'+i+'" aria-pressed="'+(e.c?'true':'false')+'" aria-label="Série '+(i+1)+' de '+sets+'">'+(e.c?'&#10003;':(i+1))+'</button>'+
           '<div class="fld"><input type="text" inputmode="decimal" enterkeyhint="done" data-f="l" data-i="'+i+'" value="'+esc(e.l)+'" placeholder="carga" aria-label="Carga da série '+(i+1)+'"><span class="u">kg</span></div>'+
-          '<div class="fld"><input type="text" inputmode="decimal" enterkeyhint="done" data-f="r" data-i="'+i+'" value="'+esc(e.r)+'" placeholder="reps" aria-label="Reps da série '+(i+1)+'"><span class="u">rep</span></div>'+
+          '<div class="fld"><input type="text" inputmode="decimal" enterkeyhint="done" data-f="r" data-i="'+i+'" value="'+esc(e.r)+'" placeholder="'+(faixa ? faixa.topo : 'reps')+'" aria-label="Reps da série '+(i+1)+(faixa ? ', sugestão '+faixa.topo : '')+'"><span class="u">rep</span></div>'+
         '</div><div class="last'+(last?'':' none')+'">'+lastTxt+'</div></div>';
     }
     html += '</div></section>';
