@@ -8,6 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Treino Full Body 4x</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <style>
 /* ===================== TEMA ===================== */
 :root{
@@ -31,7 +34,7 @@ body{
   background:var(--bg); color:var(--fg);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   font-size:16px; line-height:1.4;
-  padding-top:118px; padding-bottom:108px;
+  padding-top:126px; padding-bottom:108px;
   -webkit-text-size-adjust:100%;
 }
 button,input{font-family:inherit;font-size:16px}
@@ -70,6 +73,11 @@ main{padding:12px 10px 0}
 .pill{font-size:14px;font-weight:600;padding:3px 8px;border-radius:999px;background:var(--card2);color:var(--fg)}
 .pill.grp{background:#27303d;color:var(--accent)}
 .pill.rir{background:#3a2f16;color:var(--amber)}
+.pill.opc{background:transparent;color:var(--fg2);border:1px dashed var(--fg2);font-weight:700;letter-spacing:.3px}
+/* exercício opcional: card com borda tracejada, título um tom abaixo */
+.card.opc{border-style:dashed}
+.card.opc .cname{color:var(--fg2)}
+.card.opc.full{border-color:var(--done)}
 
 /* ilustração */
 .illu{
@@ -127,6 +135,26 @@ main{padding:12px 10px 0}
 .hex b{display:block;font-size:15px;font-weight:700}
 .hex span{color:var(--amber);font-weight:600;font-size:15px}
 .empty{color:var(--fg2);padding:20px 4px;font-size:16px}
+
+/* perfis (quem treina) */
+#head .who{display:flex;align-items:center;gap:6px;min-height:var(--tap);max-width:62vw;margin:-8px 0 -6px -8px;padding:0 8px;background:transparent;border:0;color:var(--fg);font-size:17px;font-weight:700;cursor:pointer;text-align:left}
+#head .who span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.plist{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.prow{display:flex;gap:8px}
+.pbtn{flex:1;min-height:56px;border-radius:10px;background:var(--card);color:var(--fg);border:1px solid var(--line);font-size:18px;font-weight:700;cursor:pointer;text-align:left;padding:0 14px}
+.prow.on .pbtn{border-color:var(--accent)}
+.pon{font-size:13px;color:var(--accent);font-weight:600;margin-left:8px}
+.pdel{flex:0 0 var(--tap);min-height:56px;border-radius:10px;background:var(--card);color:var(--danger);border:1px solid #5a2a2a;font-size:24px;cursor:pointer}
+.pnew{display:flex;gap:8px}
+.pnew input{flex:1;min-width:0;min-height:52px;padding:0 12px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:10px;font-size:17px}
+.pnew input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.pnew .btn{flex:0 0 104px;background:var(--accent);color:#06121f;border-color:var(--accent)}
+.ptag{display:inline-block;margin-left:6px;font-size:12px;font-weight:600;color:var(--fg2);background:var(--card2);padding:2px 7px;border-radius:999px;vertical-align:middle}
+.pcap{font-size:14px;color:var(--fg2);margin:14px 2px 6px}
+.pprog{display:flex;flex-wrap:wrap;gap:8px}
+.pradio{display:flex;align-items:center;gap:8px;min-height:var(--tap);padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);font-size:15px;cursor:pointer}
+.pradio input{width:20px;height:20px;accent-color:var(--accent);margin:0}
+.pradio small{color:var(--fg2)}
 
 /* ===================== TIMER FIXO ===================== */
 #timerbar{
@@ -434,11 +462,59 @@ main{padding:12px 10px 0}
   <g><g fill="currentColor" stroke="none"><path d="M92.2 137.9Q106.2 124.4 127.8 112Q125.9 98.2 113.3 93.5Q95.1 110.2 79.2 121.3Q81.3 133.7 92.2 137.9Z"/><path d="M123.9 108.5L130.6 104.1L124.6 93.7L117.4 97.3Z"/><circle cx="120.7" cy="102.9" r="6.5"/><circle cx="127.6" cy="98.9" r="6"/><g transform="translate(135.4 94.4) rotate(60)"><ellipse rx="9.5" ry="11"/></g><path d="M81.9 119.8L44.1 138.3L50.1 153.2L90.1 140.2Z"/><circle cx="86" cy="130" r="11"/><circle cx="47.1" cy="145.7" r="8"/><path d="M45.1 153.5L84.5 160.7L87.2 150.1L49 138Z"/><circle cx="47.1" cy="145.7" r="8"/><circle cx="85.9" cy="155.4" r="5.5"/><path d="M80.9 164.4L98.9 162.9L98.9 155.9L80.9 154.4Z"/><circle cx="80.9" cy="159.4" r="5"/><circle cx="98.9" cy="159.4" r="3.5"/><path d="M122.5 110.2L149.3 102L146.4 90.3L118.9 95.6Z"/><circle cx="120.7" cy="102.9" r="7.5"/><circle cx="147.8" cy="96.1" r="6"/><path d="M152.6 92.4L135.4 72.9L128.3 78.4L143.1 99.8Z"/><circle cx="147.8" cy="96.1" r="6"/><circle cx="131.8" cy="75.6" r="4.5"/><circle cx="131.8" cy="75.6" r="5"/></g><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="135.4,86.4 120,29"/><path d="M125.4 103.4L135.4 86.4L145.4 103.4"/></g></g>
   <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M152 72Q168 100 148 124"/><path d="M150.4 111.7L148 124L159.7 119.4"/></g>
 </symbol>
+
+<symbol id="ex-peck-deck" viewBox="0 0 200 200">
+  <title>Crucifixo na máquina (peck deck)</title>
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><line x1="48" y1="128" x2="38" y2="82"/><line x1="48" y1="128" x2="104" y2="128"/><line x1="22" y1="182" x2="178" y2="182"/></g>
+  <g opacity="0.35"><g fill="currentColor" stroke="none"><path d="M76 126.3Q74.7 106.9 79 82.4Q67.3 75 55.5 81.6Q56.7 106.3 55 125.6Q65.8 132 76 126.3Z"/><path d="M74 82L73.5 74L61.5 74L61 82Z"/><circle cx="67.5" cy="82" r="6.5"/><circle cx="67.5" cy="74" r="6"/><g transform="translate(67.5 65) rotate(0)"><ellipse rx="9.5" ry="11"/></g><path d="M65.2 137L107.3 136.9L108.5 120.9L66.8 115Z"/><circle cx="66" cy="126" r="11"/><circle cx="107.9" cy="128.9" r="8"/><path d="M99.9 129.8L106.6 169.3L117.5 168.1L115.9 128.1Z"/><circle cx="107.9" cy="128.9" r="8"/><circle cx="112.1" cy="168.7" r="5.5"/><path d="M107.1 177.7L125.1 176.2L125.1 169.2L107.1 167.7Z"/><circle cx="107.1" cy="172.7" r="5"/><circle cx="125.1" cy="172.7" r="3.5"/><path d="M65.6 74.8L38.9 83.5L42 95.1L69.5 89.3Z"/><circle cx="67.5" cy="82" r="7.5"/><circle cx="40.5" cy="89.3" r="6"/><path d="M46.5 89.3L45 63.3L36 63.3L34.5 89.3Z"/><circle cx="40.5" cy="89.3" r="6"/><circle cx="40.5" cy="63.3" r="4.5"/><circle cx="40.5" cy="63.3" r="5"/></g><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(40.5 76.3)"><rect x="-8" y="-12" width="16" height="24" rx="5"/></g><line x1="40.5" y1="71.3" x2="40.5" y2="178"/></g></g>
+  <g><g fill="currentColor" stroke="none"><path d="M76 126.3Q74.7 106.9 79 82.4Q67.3 75 55.5 81.6Q56.7 106.3 55 125.6Q65.8 132 76 126.3Z"/><path d="M74 82L73.5 74L61.5 74L61 82Z"/><circle cx="67.5" cy="82" r="6.5"/><circle cx="67.5" cy="74" r="6"/><g transform="translate(67.5 65) rotate(0)"><ellipse rx="9.5" ry="11"/></g><path d="M65.2 137L107.3 136.9L108.5 120.9L66.8 115Z"/><circle cx="66" cy="126" r="11"/><circle cx="107.9" cy="128.9" r="8"/><path d="M99.9 129.8L106.6 169.3L117.5 168.1L115.9 128.1Z"/><circle cx="107.9" cy="128.9" r="8"/><circle cx="112.1" cy="168.7" r="5.5"/><path d="M107.1 177.7L125.1 176.2L125.1 169.2L107.1 167.7Z"/><circle cx="107.1" cy="172.7" r="5"/><circle cx="125.1" cy="172.7" r="3.5"/><path d="M66.9 89.5L94.9 90.4L96 78.5L68.2 74.6Z"/><circle cx="67.5" cy="82" r="7.5"/><circle cx="95.4" cy="84.5" r="6"/><path d="M101.4 84.5L99.9 58.5L90.9 58.5L89.4 84.5Z"/><circle cx="95.4" cy="84.5" r="6"/><circle cx="95.4" cy="58.5" r="4.5"/><circle cx="95.4" cy="58.5" r="5"/></g><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(95.4 71.5)"><rect x="-8" y="-12" width="16" height="24" rx="5"/></g><line x1="95.4" y1="66.5" x2="95.4" y2="178"/></g></g>
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M44 34Q80 14 118 34"/><path d="M105.5 34.2L118 34L111.1 23.6"/></g>
+</symbol>
+
+<symbol id="ex-mergulho" viewBox="0 0 200 200">
+  <title>Mergulho nas paralelas</title>
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><line x1="56" y1="110" x2="150" y2="110"/><line x1="64" y1="110" x2="64" y2="182"/><line x1="142" y1="110" x2="142" y2="182"/><line x1="22" y1="182" x2="178" y2="182"/></g>
+  <g opacity="0.35"><g fill="currentColor" stroke="none"><path d="M108 100Q106 80.6 109.5 56Q97.5 49 86 56Q88 80.6 87 100Q98 106 108 100Z"/><path d="M104.5 56L104 48L92 48L91.5 56Z"/><circle cx="98" cy="56" r="6.5"/><circle cx="98" cy="48" r="6"/><g transform="translate(98 39) rotate(0)"><ellipse rx="9.5" ry="11"/></g><path d="M87.2 101.9L97.4 142.8L113.2 140L108.8 98.1Z"/><circle cx="98" cy="100" r="11"/><circle cx="105.3" cy="141.4" r="8"/><path d="M102.6 133.8L65.8 149.9L69.6 160.2L108 148.9Z"/><circle cx="105.3" cy="141.4" r="8"/><circle cx="67.7" cy="155" r="5.5"/><path d="M74.1 154.1L56.7 149.3L54.3 155.9L70.7 163.5Z"/><circle cx="72.4" cy="158.8" r="5"/><circle cx="55.5" cy="152.6" r="3.5"/><path d="M90.5 56L92 84L104 84L105.5 56Z"/><circle cx="98" cy="56" r="7.5"/><circle cx="98" cy="84" r="6"/><path d="M92 84L93.5 110L102.5 110L104 84Z"/><circle cx="98" cy="84" r="6"/><circle cx="98" cy="110" r="4.5"/><circle cx="98" cy="110" r="5"/></g></g>
+  <g><g fill="currentColor" stroke="none"><path d="M113.8 117.7Q115.2 98.3 123 74.7Q112.4 65.7 99.8 70.6Q97.5 95.2 93.2 114.1Q103 121.9 113.8 117.7Z"/><path d="M118 74L119.2 66.1L107.4 63.6L105.3 71.3Z"/><circle cx="111.6" cy="72.7" r="6.5"/><circle cx="113.3" cy="64.8" r="6"/><g transform="translate(115.2 56) rotate(12)"><ellipse rx="9.5" ry="11"/></g><path d="M93.2 117.9L103.4 158.8L119.2 156L114.8 114.1Z"/><circle cx="104" cy="116" r="11"/><circle cx="111.3" cy="157.4" r="8"/><path d="M108.6 149.8L71.8 165.9L75.6 176.2L114 164.9Z"/><circle cx="111.3" cy="157.4" r="8"/><circle cx="73.7" cy="171" r="5.5"/><path d="M80.1 170.1L62.7 165.3L60.3 171.9L76.7 179.5Z"/><circle cx="78.4" cy="174.8" r="5"/><circle cx="61.5" cy="168.6" r="3.5"/><path d="M106.3 67.4L87.6 88.2L96.1 96.7L116.9 78Z"/><circle cx="111.6" cy="72.7" r="7.5"/><circle cx="91.8" cy="92.5" r="6"/><path d="M86.5 95.3L100.1 117.5L108 113.3L97.1 89.7Z"/><circle cx="91.8" cy="92.5" r="6"/><circle cx="104" cy="115.4" r="4.5"/><circle cx="104" cy="115.4" r="5"/></g></g>
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M168 66Q178 92 168 120"/><path d="M166 107.6L168 120L177.4 111.7"/></g>
+</symbol>
+
+<symbol id="ex-hip-thrust" viewBox="0 0 200 200">
+  <title>Elevação pélvica (hip thrust)</title>
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><rect x="18" y="112" width="44" height="40" rx="3"/><line x1="22" y1="182" x2="178" y2="182"/></g>
+  <g opacity="0.35"><g fill="currentColor" stroke="none"><path d="M99.1 139.9Q84 127.7 69 107.8Q55.6 111.3 52.4 124.4Q71.2 140.4 84.2 154.8Q96.2 151.2 99.1 139.9Z"/><path d="M64.1 110.3L57 106.7L51 117.1L57.6 121.5Z"/><circle cx="60.9" cy="115.9" r="6.5"/><circle cx="54" cy="111.9" r="6"/><g transform="translate(46.2 107.4) rotate(-60)"><ellipse rx="9.5" ry="11"/></g><path d="M95.2 157.5L134.5 142.4L129.8 127.1L88.8 136.5Z"/><circle cx="92" cy="147" r="11"/><circle cx="132.2" cy="134.7" r="8"/><path d="M124.3 133.1L118.5 172.7L129.2 175L140 136.4Z"/><circle cx="132.2" cy="134.7" r="8"/><circle cx="123.8" cy="173.8" r="5.5"/><path d="M118.8 182.8L136.8 181.3L136.8 174.3L118.8 172.8Z"/><circle cx="118.8" cy="177.8" r="5"/><circle cx="136.8" cy="177.8" r="3.5"/><path d="M68.3 114.6L61.9 87.3L50.1 89.4L53.5 117.2Z"/><circle cx="60.9" cy="115.9" r="7.5"/><circle cx="56" cy="88.3" r="6"/><path d="M59.9 92.9L78.8 75L73 68.2L52.2 83.7Z"/><circle cx="56" cy="88.3" r="6"/><circle cx="75.9" cy="71.6" r="4.5"/><circle cx="75.9" cy="71.6" r="5"/></g><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><line x1="76" y1="133" x2="120" y2="133"/><g transform="translate(76 133) rotate(0)"><rect x="-3" y="-11" width="6" height="22" rx="2"/></g><g transform="translate(120 133) rotate(0)"><rect x="-3" y="-11" width="6" height="22" rx="2"/></g></g></g>
+  <g><g fill="currentColor" stroke="none"><path d="M105.5 108Q86.1 109 61.7 104.2Q54 115.8 60.4 127.7Q85.1 127 104.4 129Q111 118.3 105.5 108Z"/><path d="M63.3 109.6L55.6 107.3L51.5 118.6L58.8 121.8Z"/><circle cx="61.1" cy="115.7" r="6.5"/><circle cx="53.5" cy="113" r="6"/><g transform="translate(45.1 109.9) rotate(290)"><ellipse rx="9.5" ry="11"/></g><path d="M99.7 127.6L137.9 145.4L145.6 131.4L110.3 108.4Z"/><circle cx="105" cy="118" r="11"/><circle cx="141.7" cy="138.4" r="8"/><path d="M134.5 134.9L119.3 171.9L129.1 176.7L148.9 141.9Z"/><circle cx="141.7" cy="138.4" r="8"/><circle cx="124.2" cy="174.3" r="5.5"/><path d="M119.2 183.3L137.2 181.8L137.2 174.8L119.2 173.3Z"/><circle cx="119.2" cy="178.3" r="5"/><circle cx="137.2" cy="178.3" r="3.5"/><path d="M68.4 114.4L62.1 87.1L50.3 89.2L53.7 117Z"/><circle cx="61.1" cy="115.7" r="7.5"/><circle cx="56.2" cy="88.1" r="6"/><path d="M60.1 92.7L79 74.9L73.2 68L52.3 83.5Z"/><circle cx="56.2" cy="88.1" r="6"/><circle cx="76.1" cy="71.4" r="4.5"/><circle cx="76.1" cy="71.4" r="5"/></g><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><line x1="89" y1="104" x2="133" y2="104"/><g transform="translate(89 104) rotate(0)"><rect x="-3" y="-11" width="6" height="22" rx="2"/></g><g transform="translate(133 104) rotate(0)"><rect x="-3" y="-11" width="6" height="22" rx="2"/></g></g></g>
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M166 156Q178 132 166 106"/><path d="M176.1 113.5L166 106L165.2 118.5"/></g>
+</symbol>
+
+<symbol id="ex-agacho-bulgaro" viewBox="0 0 200 200">
+  <title>Agachamento búlgaro</title>
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="150" width="42" height="10" rx="2"/><line x1="24" y1="160" x2="24" y2="182"/><line x1="50" y1="160" x2="50" y2="182"/><line x1="22" y1="182" x2="178" y2="182"/></g>
+  <g opacity="0.35"><g fill="currentColor" stroke="none"><path d="M88.3 83.6L63.6 117.7L74.4 126.7L103.7 96.4Z"/><circle cx="96" cy="90" r="10"/><circle cx="69" cy="122.2" r="7"/><path d="M64.3 117L35.6 144.9L43 153L73.7 127.4Z"/><circle cx="69" cy="122.2" r="7"/><circle cx="39.3" cy="148.9" r="5.5"/><path d="M45.7 148L28.3 143.2L25.9 149.8L42.3 157.3Z"/><circle cx="44" cy="152.6" r="5"/><circle cx="27.1" cy="146.5" r="3.5"/><path d="M106 90.7Q105.3 71.2 110.5 46.9Q99.1 39.1 87.1 45.3Q87.4 70 85 89.2Q95.6 96 106 90.7Z"/><path d="M105.6 46.3L105.3 38.3L93.4 37.9L92.6 45.9Z"/><circle cx="99.1" cy="46.1" r="6.5"/><circle cx="99.3" cy="38.1" r="6"/><g transform="translate(99.7 29.1) rotate(2)"><ellipse rx="9.5" ry="11"/></g><path d="M85.2 91.9L95.4 132.8L111.2 130L106.8 88.1Z"/><circle cx="96" cy="90" r="11"/><circle cx="103.3" cy="131.4" r="8"/><path d="M95.3 130.7L94.3 170.7L105.3 171.7L111.3 132.1Z"/><circle cx="103.3" cy="131.4" r="8"/><circle cx="99.8" cy="171.2" r="5.5"/><path d="M94.8 180.2L112.8 178.7L112.8 171.7L94.8 170.2Z"/><circle cx="94.8" cy="175.2" r="5"/><circle cx="112.8" cy="175.2" r="3.5"/><path d="M91.6 45.8L92.1 73.9L104.1 74.3L106.6 46.4Z"/><circle cx="99.1" cy="46.1" r="7.5"/><circle cx="98.1" cy="74.1" r="6"/><path d="M92.1 74.1L93.6 100.1L102.6 100.1L104.1 74.1Z"/><circle cx="98.1" cy="74.1" r="6"/><circle cx="98.1" cy="100.1" r="4.5"/><circle cx="98.1" cy="100.1" r="5"/></g><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><line x1="87.1" y1="100.1" x2="109.1" y2="100.1"/><g transform="translate(87.1 100.1) rotate(0)"><rect x="-4" y="-8" width="8" height="16" rx="2"/></g><g transform="translate(109.1 100.1) rotate(0)"><rect x="-4" y="-8" width="8" height="16" rx="2"/></g></g></g>
+  <g><g fill="currentColor" stroke="none"><path d="M82.5 116.7L71.7 157.4L84.9 162L101.5 123.3Z"/><circle cx="92" cy="120" r="10"/><circle cx="78.3" cy="159.7" r="7"/><path d="M80.3 153L41.4 143.4L38.4 154L76.4 166.4Z"/><circle cx="78.3" cy="159.7" r="7"/><circle cx="39.9" cy="148.7" r="5.5"/><path d="M46.3 147.7L28.9 143L26.5 149.5L42.9 157.1Z"/><circle cx="44.6" cy="152.4" r="5"/><circle cx="27.7" cy="146.2" r="3.5"/><path d="M101.8 121.7Q103.2 102.3 111 78.7Q100.4 69.7 87.8 74.6Q85.5 99.2 81.2 118.1Q91 125.9 101.8 121.7Z"/><path d="M106.1 77.3L106.4 69.3L94.5 68.1L93.2 76Z"/><circle cx="99.6" cy="76.7" r="6.5"/><circle cx="100.5" cy="68.7" r="6"/><g transform="translate(101.4 59.8) rotate(6)"><ellipse rx="9.5" ry="11"/></g><path d="M86.2 129.3L123.4 149L131.9 135.5L97.8 110.7Z"/><circle cx="92" cy="120" r="11"/><circle cx="127.6" cy="142.3" r="8"/><path d="M121.9 136.7L95.9 167.2L103.8 174.9L133.4 147.8Z"/><circle cx="127.6" cy="142.3" r="8"/><circle cx="99.8" cy="171" r="5.5"/><path d="M94.8 180L112.8 178.5L112.8 171.5L94.8 170Z"/><circle cx="94.8" cy="175" r="5"/><circle cx="112.8" cy="175" r="3.5"/><path d="M92.1 76.4L92.7 104.4L104.7 104.9L107.1 76.9Z"/><circle cx="99.6" cy="76.7" r="7.5"/><circle cx="98.7" cy="104.7" r="6"/><path d="M92.7 104.7L94.2 130.7L103.2 130.7L104.7 104.7Z"/><circle cx="98.7" cy="104.7" r="6"/><circle cx="98.7" cy="130.7" r="4.5"/><circle cx="98.7" cy="130.7" r="5"/></g><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><line x1="87.7" y1="130.7" x2="109.7" y2="130.7"/><g transform="translate(87.7 130.7) rotate(0)"><rect x="-4" y="-8" width="8" height="16" rx="2"/></g><g transform="translate(109.7 130.7) rotate(0)"><rect x="-4" y="-8" width="8" height="16" rx="2"/></g></g></g>
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M156 78Q172 104 158 132"/><path d="M157.6 119.5L158 132L168.3 124.8"/></g>
+</symbol>
+
+<symbol id="ex-triceps-testa" viewBox="0 0 200 200">
+  <title>Tríceps testa com barra</title>
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><line x1="30" y1="137" x2="152" y2="137"/><line x1="44" y1="137" x2="44" y2="182"/><line x1="138" y1="137" x2="138" y2="182"/><line x1="22" y1="182" x2="178" y2="182"/></g>
+  <g opacity="0.35"><g fill="currentColor" stroke="none"><path d="M110 116Q90.6 118 66 114.5Q59 126.5 66 138Q90.6 136 110 137Q116 126 110 116Z"/><path d="M66 119.5L58 120L58 132L66 132.5Z"/><circle cx="66" cy="126" r="6.5"/><circle cx="58" cy="126" r="6"/><g transform="translate(49 126) rotate(270)"><ellipse rx="9.5" ry="11"/></g><path d="M110 137L152 134L152 118L110 115Z"/><circle cx="110" cy="126" r="11"/><circle cx="152" cy="126" r="8"/><path d="M144 126L146.5 166L157.5 166L160 126Z"/><circle cx="152" cy="126" r="8"/><circle cx="152" cy="166" r="5.5"/><path d="M147 161L148.5 179L155.5 179L157 161Z"/><circle cx="152" cy="161" r="5"/><circle cx="152" cy="179" r="3.5"/><path d="M73.5 126L72 98L60 98L58.5 126Z"/><circle cx="66" cy="126" r="7.5"/><circle cx="66" cy="98" r="6"/><path d="M68.1 92.4L43.1 84.9L40 93.3L63.9 103.6Z"/><circle cx="66" cy="98" r="6"/><circle cx="41.6" cy="89.1" r="4.5"/><circle cx="41.6" cy="89.1" r="5"/></g><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><line x1="25.6" y1="89.1" x2="57.6" y2="89.1"/><g transform="translate(25.6 89.1) rotate(0)"><rect x="-3" y="-11" width="6" height="22" rx="2"/></g><g transform="translate(57.6 89.1) rotate(0)"><rect x="-3" y="-11" width="6" height="22" rx="2"/></g></g></g>
+  <g><g fill="currentColor" stroke="none"><path d="M110 116Q90.6 118 66 114.5Q59 126.5 66 138Q90.6 136 110 137Q116 126 110 116Z"/><path d="M66 119.5L58 120L58 132L66 132.5Z"/><circle cx="66" cy="126" r="6.5"/><circle cx="58" cy="126" r="6"/><g transform="translate(49 126) rotate(270)"><ellipse rx="9.5" ry="11"/></g><path d="M110 137L152 134L152 118L110 115Z"/><circle cx="110" cy="126" r="11"/><circle cx="152" cy="126" r="8"/><path d="M144 126L146.5 166L157.5 166L160 126Z"/><circle cx="152" cy="126" r="8"/><circle cx="152" cy="166" r="5.5"/><path d="M147 161L148.5 179L155.5 179L157 161Z"/><circle cx="152" cy="161" r="5"/><circle cx="152" cy="179" r="3.5"/><path d="M73.5 126L72 98L60 98L58.5 126Z"/><circle cx="66" cy="126" r="7.5"/><circle cx="66" cy="98" r="6"/><path d="M72 98L70.5 72L61.5 72L60 98Z"/><circle cx="66" cy="98" r="6"/><circle cx="66" cy="72" r="4.5"/><circle cx="66" cy="72" r="5"/></g><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><line x1="50" y1="72" x2="82" y2="72"/><g transform="translate(50 72) rotate(0)"><rect x="-3" y="-11" width="6" height="22" rx="2"/></g><g transform="translate(82 72) rotate(0)"><rect x="-3" y="-11" width="6" height="22" rx="2"/></g></g></g>
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M26 66Q42 44 74 50"/><path d="M62.1 53.9L74 50L64.3 42.1"/></g>
+</symbol>
+
+<symbol id="ex-triceps-coice" viewBox="0 0 200 200">
+  <title>Tríceps coice na polia</title>
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><line x1="176" y1="60" x2="176" y2="182"/><circle cx="172" cy="150" r="7"/><line x1="22" y1="182" x2="178" y2="182"/></g>
+  <g opacity="0.35"><g fill="currentColor" stroke="none"><path d="M94.4 101.7Q108 87.7 129.1 74.5Q126.7 60.8 114 56.5Q96.4 73.9 80.9 85.6Q83.4 97.9 94.4 101.7Z"/><path d="M125.5 71L131.7 65.9L124.7 56.2L117.9 60.5Z"/><circle cx="121.7" cy="65.7" r="6.5"/><circle cx="128.2" cy="61" r="6"/><g transform="translate(135.5 55.7) rotate(54)"><ellipse rx="9.5" ry="11"/></g><path d="M77 93.6L78.5 135.7L94.5 136.3L99 94.4Z"/><circle cx="88" cy="94" r="11"/><circle cx="86.5" cy="136" r="8"/><path d="M78.5 136.3L82.4 176.1L93.4 175.8L94.5 135.7Z"/><circle cx="86.5" cy="136" r="8"/><circle cx="87.9" cy="176" r="5.5"/><path d="M82.9 185L100.9 183.5L100.9 176.5L82.9 175Z"/><circle cx="82.9" cy="180" r="5"/><circle cx="100.9" cy="180" r="3.5"/><path d="M118 59.2L94.5 74.5L100.5 84.9L125.5 72.2Z"/><circle cx="121.7" cy="65.7" r="7.5"/><circle cx="97.5" cy="79.7" r="6"/><path d="M91.5 79.7L93 105.7L102 105.7L103.5 79.7Z"/><circle cx="97.5" cy="79.7" r="6"/><circle cx="97.5" cy="105.7" r="4.5"/><circle cx="97.5" cy="105.7" r="5"/></g><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="97.5,105.7 168,148"/><g transform="translate(97.5 105.7)"><rect x="-4" y="-11" width="8" height="22" rx="4"/></g></g></g>
+  <g><g fill="currentColor" stroke="none"><path d="M94.4 101.7Q108 87.7 129.1 74.5Q126.7 60.8 114 56.5Q96.4 73.9 80.9 85.6Q83.4 97.9 94.4 101.7Z"/><path d="M125.5 71L131.7 65.9L124.7 56.2L117.9 60.5Z"/><circle cx="121.7" cy="65.7" r="6.5"/><circle cx="128.2" cy="61" r="6"/><g transform="translate(135.5 55.7) rotate(54)"><ellipse rx="9.5" ry="11"/></g><path d="M77 93.6L78.5 135.7L94.5 136.3L99 94.4Z"/><circle cx="88" cy="94" r="11"/><circle cx="86.5" cy="136" r="8"/><path d="M78.5 136.3L82.4 176.1L93.4 175.8L94.5 135.7Z"/><circle cx="86.5" cy="136" r="8"/><circle cx="87.9" cy="176" r="5.5"/><path d="M82.9 185L100.9 183.5L100.9 176.5L82.9 175Z"/><circle cx="82.9" cy="180" r="5"/><circle cx="100.9" cy="180" r="3.5"/><path d="M118 59.2L94.5 74.5L100.5 84.9L125.5 72.2Z"/><circle cx="121.7" cy="65.7" r="7.5"/><circle cx="97.5" cy="79.7" r="6"/><path d="M96.4 73.8L71.1 79.8L72.6 88.7L98.5 85.6Z"/><circle cx="97.5" cy="79.7" r="6"/><circle cx="71.9" cy="84.2" r="4.5"/><circle cx="71.9" cy="84.2" r="5"/></g><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="71.9,84.2 168,148"/><g transform="translate(71.9 84.2)"><rect x="-4" y="-11" width="8" height="22" rx="4"/></g></g></g>
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M104 124Q80 130 60 104"/><path d="M71.5 109.1L60 104L62 116.4"/></g>
+</symbol>
 </svg>
 
 <header id="topbar">
   <div id="head">
-    <div class="t">Full Body 4x</div>
+    <button class="who" id="who" data-go="PERFIL" aria-label="Trocar pessoa">&#128100;<span id="whoname">&mdash;</span>&#9662;</button>
     <div class="d" id="today"></div>
   </div>
   <nav id="tabs"></nav>
@@ -463,18 +539,31 @@ main{padding:12px 10px 0}
 /* ==========================================================================
    BLOCO DE DADOS DO TREINO — EDITE SOMENTE DAQUI ATÉ O FIM DESTE BLOCO
    --------------------------------------------------------------------------
+   PROGRAMAS: um programa por público (masculino, feminino...). Cada perfil
+   escolhe o seu ao ser criado. Cada programa tem:
+     nome    — como aparece na tela de perfis
+     treinos — lista de dias: { id, nome, dia, ex:[ ...exercícios ] }
+     dias    — dia da semana (0=dom ... 6=sáb) -> id do treino; null = descanso
    Formato de cada exercício:
-     ["Grupamento", "Nome do exercício", séries, "reps", "RIR"]
-      [0]           [1]                  [2]     [3]     [4]
+     ["Grupamento", "Nome do exercício", séries, "reps", "RIR", opcional]
+      [0]           [1]                  [2]     [3]     [4]    [5]
    - séries: número inteiro (gera essa quantidade de linhas de série)
    - reps e RIR: texto livre, aparecem no card exatamente como escritos
+   - opcional: true marca o exercício como "se sobrar tempo". Ele ganha o
+     selo OPCIONAL, fica com o card recuado e NÃO entra na conta da barra de
+     progresso — a sessão fecha 100% sem ele. Se você fizer, as cargas são
+     registradas e entram no histórico normalmente. Omita o campo (ou use
+     false) para o exercício ser obrigatório.
    - o nome do exercício é a chave do histórico: ao renomeá-lo, o histórico
      antigo daquele exercício deixa de ser encontrado (o resto continua).
    A ordem dos exercícios dentro do dia e a ordem dos dias são respeitadas
    exatamente como estão aqui.
-   Para mudar o dia da semana de cada treino, edite SCHEDULE logo abaixo.
+   Para mudar o dia da semana de cada treino, edite "dias" do programa.
    ========================================================================== */
-var WORKOUTS = [
+var PROGRAMAS = {
+
+  /* ======================= MASCULINO ======================= */
+  masculino: { nome:"Masculino", treinos:[
   { id:"A1", nome:"A1", dia:"Segunda", ex:[
     ["Quadríceps",  "Hack squat",                    3, "6–10",  "2"],
     ["Peito",       "Supino inclinado com halteres", 3, "6–10",  "2"],
@@ -495,34 +584,46 @@ var WORKOUTS = [
     ["Delt. post.", "Crucifixo inverso",             2, "12–20", "1"],
     ["Bíceps",      "Rosca martelo",                 2, "10–15", "1–2"],
     ["Tríceps",     "Tríceps acima da cabeça",       2, "10–15", "1–2"],
-    ["Core",        "Ab wheel",                      2, "8–12",  "1–2"]
+    ["Core",        "Ab wheel",                      2, "8–12",  "1–2", true]
   ]},
   { id:"A2", nome:"A2", dia:"Quarta", ex:[
     ["Quadríceps",  "Agachamento no Smith",          3, "8–12",  "2–3"],
-    ["Peito",       "Supino inclinado máquina",      3, "8–12",  "2–3"],
+    ["Peito",       "Crucifixo na máquina (peck deck)", 3, "8–12", "2–3"],
     ["Costas",      "Puxada neutra",                 3, "8–12",  "2"],
     ["Posterior",   "Flexora sentada",               2, "10–15", "1–2"],
     ["Ombros",      "Elevação lateral máquina",      2, "12–20", "1"],
     ["Bíceps",      "Rosca Scott",                   2, "10–15", "1–2"],
-    ["Tríceps",     "Tríceps corda",                 2, "10–15", "1–2"],
+    ["Tríceps",     "Tríceps testa com barra",       2, "10–15", "1–2"],
     ["Panturrilha", "Panturrilha sentada",           2, "12–15", "1–2"]
   ]},
   { id:"B2", nome:"B2", dia:"Quinta", ex:[
-    ["Posterior",   "Stiff na barra ou Smith",       3, "8–12",  "2–3"],
+    ["Posterior",   "Elevação pélvica (hip thrust)", 3, "8–12",  "2–3"],
     ["Costas",      "Remada com peito apoiado",      3, "8–12",  "2–3"],
-    ["Peito",       "Chest press máquina",           3, "8–12",  "2–3"],
-    ["Quadríceps",  "Cadeira extensora",             2, "12–15", "1–2"],
+    ["Peito",       "Mergulho nas paralelas",        3, "8–12",  "2–3"],
+    ["Quadríceps",  "Agachamento búlgaro",           2, "10–12", "1–2"],
     ["Ombros",      "Elevação lateral",              2, "12–20", "1"],
     ["Delt. post.", "Face pull",                     2, "15–20", "1"],
     ["Bíceps",      "Rosca inclinada",               2, "10–15", "1–2"],
-    ["Tríceps",     "Tríceps polia unilateral",      2, "10–15", "1–2"],
-    ["Core",        "Abdominal na polia",            2, "10–15", "1–2"]
+    ["Tríceps",     "Tríceps coice na polia",        2, "10–15", "1–2"],
+    ["Core",        "Abdominal na polia",            2, "10–15", "1–2", true]
   ]}
-];
+  ],
+  /* dia da semana -> treino. 0=domingo, 1=segunda ... 6=sábado. null = descanso */
+  dias: { 1:"A1", 2:"B1", 3:"A2", 4:"B2", 5:null, 6:null, 0:null } },
 
-/* Dia da semana -> treino.  0=domingo, 1=segunda ... 6=sábado.
-   null = descanso / cardio (abre a tela de descanso). */
-var SCHEDULE = { 1:"A1", 2:"B1", 3:"A2", 4:"B2", 5:null, 6:null, 0:null };
+  /* ============ FEMININO — glúteos e pernas (A MONTAR) ============
+     Copie o formato do masculino: { id:"A", nome:"A", dia:"Segunda", ex:[...] }
+     Exercício sem desenho ainda aparece com o placeholder do nome. */
+  feminino: { nome:"Feminino — glúteos e pernas", treinos:[
+  ],
+  dias: { 1:null, 2:null, 3:null, 4:null, 5:null, 6:null, 0:null } }
+};
+
+/* programa usado quando um perfil não escolheu nenhum */
+var PROGRAMA_PADRAO = "masculino";
+
+/* WORKOUTS e SCHEDULE apontam para o programa do perfil ativo (usarPrograma) */
+var WORKOUTS = [], SCHEDULE = {};
 
 /* Nome do exercício -> id do <symbol> da biblioteca no topo do documento.
    Exercício sem entrada aqui (ou com symbol ainda não desenhado) cai
@@ -530,40 +631,46 @@ var SCHEDULE = { 1:"A1", 2:"B1", 3:"A2", 4:"B2", 5:null, 6:null, 0:null };
    Dois exercícios podem apontar para o mesmo symbol quando o movimento é
    o mesmo (ex.: cadeira extensora em A1 e B2). */
 var ILLU = {
-  "Hack squat":                    "ex-hack-squat",
-  "Agachamento no Smith":          "ex-agacho-smith",
-  "Leg press":                     "ex-leg-press",
-  "Cadeira extensora":             "ex-extensora",
-  "Stiff com halteres":            "ex-stiff-halteres",
-  "Stiff na barra ou Smith":       "ex-stiff-barra",
-  "Mesa flexora":                  "ex-mesa-flexora",
-  "Flexora sentada":               "ex-flexora-sentada",
-  "Panturrilha em pé":             "ex-panturrilha-pe",
-  "Panturrilha sentada":           "ex-panturrilha-sentada",
-  "Supino inclinado com halteres": "ex-supino-inc-halteres",
-  "Supino máquina":                "ex-supino-maquina",
-  "Chest press máquina":           "ex-supino-maquina",
-  "Supino inclinado máquina":      "ex-supino-inc-maquina",
-  "Desenvolvimento máquina":       "ex-desenvolvimento-maquina",
-  "Puxada frontal pronada":        "ex-puxada-frontal",
-  "Puxada neutra":                 "ex-puxada-neutra",
-  "Remada baixa neutra":           "ex-remada-baixa",
-  "Remada com peito apoiado":      "ex-remada-apoiada",
-  "Elevação lateral":              "ex-elev-lateral",
-  "Elevação lateral na polia":     "ex-elev-lateral-polia",
-  "Elevação lateral máquina":      "ex-elev-lateral-maquina",
-  "Crucifixo inverso":             "ex-crucifixo-inverso",
-  "Face pull":                     "ex-face-pull",
-  "Rosca direta":                  "ex-rosca-direta",
-  "Rosca martelo":                 "ex-rosca-martelo",
-  "Rosca Scott":                   "ex-rosca-scott",
-  "Rosca inclinada":               "ex-rosca-inclinada",
-  "Tríceps na polia":              "ex-triceps-polia",
-  "Tríceps corda":                 "ex-triceps-corda",
-  "Tríceps polia unilateral":      "ex-triceps-unilateral",
-  "Tríceps acima da cabeça":       "ex-triceps-testa-alta",
-  "Ab wheel":                      "ex-ab-wheel",
-  "Abdominal na polia":            "ex-abdominal-polia"
+  "Hack squat":                       "ex-hack-squat",
+  "Agachamento no Smith":             "ex-agacho-smith",
+  "Leg press":                        "ex-leg-press",
+  "Cadeira extensora":                "ex-extensora",
+  "Stiff com halteres":               "ex-stiff-halteres",
+  "Stiff na barra ou Smith":          "ex-stiff-barra",
+  "Mesa flexora":                     "ex-mesa-flexora",
+  "Flexora sentada":                  "ex-flexora-sentada",
+  "Panturrilha em pé":                "ex-panturrilha-pe",
+  "Panturrilha sentada":              "ex-panturrilha-sentada",
+  "Supino inclinado com halteres":    "ex-supino-inc-halteres",
+  "Supino máquina":                   "ex-supino-maquina",
+  "Chest press máquina":              "ex-supino-maquina",
+  "Supino inclinado máquina":         "ex-supino-inc-maquina",
+  "Desenvolvimento máquina":          "ex-desenvolvimento-maquina",
+  "Puxada frontal pronada":           "ex-puxada-frontal",
+  "Puxada neutra":                    "ex-puxada-neutra",
+  "Remada baixa neutra":              "ex-remada-baixa",
+  "Remada com peito apoiado":         "ex-remada-apoiada",
+  "Elevação lateral":                 "ex-elev-lateral",
+  "Elevação lateral na polia":        "ex-elev-lateral-polia",
+  "Elevação lateral máquina":         "ex-elev-lateral-maquina",
+  "Crucifixo inverso":                "ex-crucifixo-inverso",
+  "Face pull":                        "ex-face-pull",
+  "Rosca direta":                     "ex-rosca-direta",
+  "Rosca martelo":                    "ex-rosca-martelo",
+  "Rosca Scott":                      "ex-rosca-scott",
+  "Rosca inclinada":                  "ex-rosca-inclinada",
+  "Tríceps na polia":                 "ex-triceps-polia",
+  "Tríceps corda":                    "ex-triceps-corda",
+  "Tríceps polia unilateral":         "ex-triceps-unilateral",
+  "Tríceps acima da cabeça":          "ex-triceps-testa-alta",
+  "Ab wheel":                         "ex-ab-wheel",
+  "Abdominal na polia":               "ex-abdominal-polia",
+  "Crucifixo na máquina (peck deck)": "ex-peck-deck",
+  "Mergulho nas paralelas":           "ex-mergulho",
+  "Elevação pélvica (hip thrust)":    "ex-hip-thrust",
+  "Agachamento búlgaro":              "ex-agacho-bulgaro",
+  "Tríceps testa com barra":          "ex-triceps-testa",
+  "Tríceps coice na polia":           "ex-triceps-coice"
 };
 
 /* ======================= FIM DO BLOCO DE DADOS ======================= */
@@ -580,9 +687,14 @@ function wkById(id){ for(var i=0;i<WORKOUTS.length;i++){ if(WORKOUTS[i].id===id)
 function setsOf(wk, name){ for(var i=0;i<wk.ex.length;i++){ if(wk.ex[i][1]===name) return wk.ex[i][2]; } return 0; }
 
 /* ---------------------- persistência ----------------------
-   Uma chave de localStorage por sessão:  tw1:AAAA-MM-DD:TREINO
-   valor: { d:data, w:treino, t:timestamp,
-            e:{ "Nome do exercício":[{l:carga, r:reps, c:feito}, ...] } }      */
+   Os dados são separados por PERFIL (o nome de quem treina). Chaves:
+     tw1:perfis                       lista JSON com os nomes
+     tw1:perfil                       nome ativo no momento
+     tw1:s:<nome>:AAAA-MM-DD:TREINO   uma sessão
+   valor da sessão: { d:data, w:treino, t:timestamp,
+            e:{ "Nome do exercício":[{l:carga, r:reps, c:feito}, ...] } }
+   <nome> vai codificado (encodeURIComponent) para nunca conflitar com ":".
+   Não há senha: é separação de dados, não sigilo.                         */
 var PREFIX = "tw1:";
 
 /* Acesso ao localStorage à prova de falha: em aba anônima, com storage
@@ -601,16 +713,17 @@ var LS = (function(){
   };
 })();
 
-function sKey(date,w){ return PREFIX+date+":"+w; }
+function perfilKey(nome){ return PREFIX+"s:"+encodeURIComponent(nome===undefined ? (state.perfil||"") : nome)+":"; }
+function sKey(date,w){ return perfilKey()+date+":"+w; }
 function loadSess(date,w){
   try{ var v = JSON.parse(LS.get(sKey(date,w))); return (v && v.e) ? v : null; }catch(e){ return null; }
 }
 function saveSess(s){ s.t = Date.now(); LS.set(sKey(s.d,s.w), JSON.stringify(s)); }
 function allSess(){
-  var out=[], ks = LS.keys();
+  var out=[], ks = LS.keys(), pre = perfilKey();
   for(var i=0;i<ks.length;i++){
     var k=ks[i];
-    if(!k || k.indexOf(PREFIX)!==0 || k.split(":").length!==3) continue;
+    if(!k || k.indexOf(pre)!==0) continue;
     try{ var v=JSON.parse(LS.get(k)); if(v && v.d && v.w && v.e) out.push(v); }catch(e){}
   }
   out.sort(function(a,b){ return a.d<b.d ? 1 : (a.d>b.d ? -1 : 0); });   /* mais recente primeiro */
@@ -633,8 +746,51 @@ function lastFor(w, exName, setIdx, skipDate){
   return null;
 }
 
+/* ---------------------- perfis ---------------------- */
+function perfis(){ try{ var v = JSON.parse(LS.get(PREFIX+"perfis")); return Array.isArray(v) ? v : []; }catch(e){ return []; } }
+function savePerfis(list){ LS.set(PREFIX+"perfis", JSON.stringify(list)); }
+function normNome(n){ return String(n||"").replace(/\s+/g," ").trim().slice(0,30); }
+/* cria (ou reaproveita, ignorando maiúsculas) e devolve o nome canônico */
+function addPerfil(nome, prog){
+  nome = normNome(nome); if(!nome) return null;
+  var list = perfis(), igual = null;
+  list.forEach(function(p){ if(p.toLowerCase()===nome.toLowerCase()) igual = p; });
+  if(igual) return igual;
+  if(!list.length) migrarLegado(nome);      /* primeiro perfil herda o que já estava gravado */
+  setProg(nome, PROGRAMAS[prog] ? prog : PROGRAMA_PADRAO);
+  list.push(nome); savePerfis(list);
+  return nome;
+}
+function setPerfil(nome){ state.perfil = nome; LS.set(PREFIX+"perfil", nome); usarPrograma(progDe(nome)); }
+
+/* programa de cada perfil (chave tw1:prog:<nome>) */
+function progDe(nome){ return LS.get(PREFIX+"prog:"+encodeURIComponent(nome)) || PROGRAMA_PADRAO; }
+function setProg(nome, key){ LS.set(PREFIX+"prog:"+encodeURIComponent(nome), key); }
+function usarPrograma(key){
+  if(!PROGRAMAS[key]) key = PROGRAMA_PADRAO;
+  state.programa = key;
+  WORKOUTS = PROGRAMAS[key].treinos || [];
+  SCHEDULE = PROGRAMAS[key].dias || {};
+}
+function delPerfil(nome){
+  var pre = perfilKey(nome);
+  LS.keys().forEach(function(k){ if(k && k.indexOf(pre)===0) LS.del(k); });
+  savePerfis(perfis().filter(function(p){ return p!==nome; }));
+  if(state.perfil===nome){ state.perfil = null; LS.del(PREFIX+"perfil"); }
+}
+/* sessões gravadas antes de existirem perfis (tw1:AAAA-MM-DD:TREINO) */
+function migrarLegado(nome){
+  var pre = perfilKey(nome);
+  LS.keys().forEach(function(k){
+    if(!k || k.indexOf(PREFIX)!==0) return;
+    var p = k.split(":");
+    if(p.length!==3 || !/^\d{4}-\d{2}-\d{2}$/.test(p[1])) return;
+    var v = LS.get(k); if(v){ LS.set(pre+p[1]+":"+p[2], v); LS.del(k); }
+  });
+}
+
 /* ---------------------- estado ---------------------- */
-var state = { date: isoDate(new Date()), view: null, sess: null };
+var state = { date: isoDate(new Date()), view: null, sess: null, perfil: null, programa: null };
 
 function ensureSess(w){
   var s = loadSess(state.date, w);
@@ -683,6 +839,7 @@ function illuPlaceholder(name){
 var viewEl = document.getElementById("view");
 
 function renderTabs(){
+  document.getElementById("whoname").textContent = state.perfil || "quem treina?";
   var html = WORKOUTS.map(function(w){
     return '<button class="tab" data-go="'+w.id+'" aria-selected="'+(state.view===w.id)+'">'+esc(w.nome)+'</button>';
   }).join("");
@@ -693,15 +850,17 @@ function renderTabs(){
 function renderProgress(){
   var fill = document.getElementById("progfill");
   if(!state.sess){ fill.style.width = "0"; return; }
-  var wk = wkById(state.view), total=0, done=0;
+  /* exercícios opcionais (x[5]) não entram na conta: a sessão fecha 100%
+     sem eles. As séries opcionais feitas aparecem à parte, como "+N". */
+  var wk = wkById(state.view), total=0, done=0, extra=0;
   wk.ex.forEach(function(x){
-    total += x[2];
-    var arr = state.sess.e[x[1]] || [];
-    for(var i=0;i<x[2];i++){ if(arr[i] && arr[i].c) done++; }
+    var arr = state.sess.e[x[1]] || [], feitas = 0;
+    for(var i=0;i<x[2];i++){ if(arr[i] && arr[i].c) feitas++; }
+    if(x[5]){ extra += feitas; } else { total += x[2]; done += feitas; }
   });
   fill.style.width = total ? Math.round(done/total*100)+"%" : "0";
   var sub = document.getElementById("sub");
-  if(sub) sub.textContent = done+"/"+total+(total===1 ? " série" : " séries");
+  if(sub) sub.textContent = done+"/"+total+(total===1 ? " série" : " séries") + (extra ? " +"+extra : "");
 }
 
 function renderWorkout(id){
@@ -711,16 +870,17 @@ function renderWorkout(id){
   var html = '<div class="sechead"><h1>'+esc(wk.nome)+' &middot; '+esc(wk.dia)+'</h1><div class="sub" id="sub"></div></div>';
 
   wk.ex.forEach(function(x){
-    var grp=x[0], name=x[1], sets=x[2], reps=x[3], rir=x[4];
+    var grp=x[0], name=x[1], sets=x[2], reps=x[3], rir=x[4], opc=!!x[5];
     var arr = state.sess.e[name] || [];
     var allDone = true;
     for(var i=0;i<sets;i++){ if(!(arr[i] && arr[i].c)) allDone = false; }
 
-    html += '<section class="card'+(allDone?' full':'')+'" data-ex="'+esc(name)+'">'+
+    html += '<section class="card'+(allDone?' full':'')+(opc?' opc':'')+'" data-ex="'+esc(name)+'">'+
       '<div class="chead"><div class="cname">'+esc(name)+'</div><div class="cmeta">'+
         '<span class="pill grp">'+esc(grp)+'</span>'+
         '<span class="pill">'+sets+' &times; '+esc(reps)+'</span>'+
         '<span class="pill rir">RIR '+esc(rir)+'</span>'+
+        (opc ? '<span class="pill opc">opcional</span>' : '')+
       '</div></div>'+
       '<button class="illu" data-open="0" data-illu="1" aria-expanded="false">'+
         illuSVG(name)+'<span class="cap">toque para ampliar</span>'+
@@ -799,7 +959,60 @@ function renderHist(){
   window.scrollTo(0,0);
 }
 
+function renderPerfil(){
+  state.view = "PERFIL"; state.sess = null;
+  var list = perfis();
+  var html = '<div class="note"><h1>Quem vai treinar?</h1><p>Cada nome guarda as próprias cargas e o próprio histórico, neste aparelho. Não tem senha.</p></div>';
+  if(list.length){
+    html += '<div class="plist">' + list.map(function(p){
+      var ativo = p === state.perfil;
+      var pr = PROGRAMAS[progDe(p)] || PROGRAMAS[PROGRAMA_PADRAO];
+      return '<div class="prow'+(ativo?' on':'')+'">'+
+        '<button class="pbtn" data-perfil="'+esc(p)+'">'+esc(p)+' <span class="ptag">'+esc(pr.nome)+'</span>'+(ativo ? ' <span class="pon">ativo</span>' : '')+'</button>'+
+        '<button class="pdel" data-delperfil="'+esc(p)+'" aria-label="Remover '+esc(p)+'">&times;</button></div>';
+    }).join("") + '</div>';
+  }
+  html += '<form class="pnew" id="pnew" autocomplete="off">'+
+    '<input type="text" id="pnome" maxlength="30" placeholder="'+(list.length ? 'Outro nome' : 'Seu nome')+'" autocapitalize="words" aria-label="Nome">'+
+    '<button type="submit" class="btn">Entrar</button></form>'+
+    '<div class="pcap">Programa do novo nome:</div>'+
+    '<div class="pprog" role="radiogroup" aria-label="Programa">' + Object.keys(PROGRAMAS).map(function(k){
+      var pr = PROGRAMAS[k];
+      return '<label class="pradio"><input type="radio" name="prog" value="'+esc(k)+'"'+(k===PROGRAMA_PADRAO ? ' checked' : '')+'> '+
+        esc(pr.nome)+(pr.treinos && pr.treinos.length ? '' : ' <small>(a montar)</small>')+'</label>';
+    }).join("") + '</div>';
+  viewEl.innerHTML = html;
+  renderTabs(); renderProgress();
+  window.scrollTo(0,0);
+  if(!list.length){ var inp = document.getElementById("pnome"); if(inp) inp.focus(); }
+}
+/* entra com um nome (novo ou existente) e abre o treino do dia */
+function entrar(nome, prog){
+  var n = addPerfil(nome, prog); if(!n) return;
+  setPerfil(n);
+  if(!WORKOUTS.length) return renderVazio();
+  var w = SCHEDULE[new Date().getDay()];
+  if(w && wkById(w)) renderWorkout(w); else renderRest();
+}
+document.addEventListener("submit", function(ev){
+  if(ev.target.id !== "pnew") return;
+  ev.preventDefault();
+  var sel = document.querySelector('input[name="prog"]:checked');
+  entrar(document.getElementById("pnome").value, sel ? sel.value : PROGRAMA_PADRAO);
+});
+/* programa escolhido ainda sem treinos montados */
+function renderVazio(){
+  state.view = "VAZIO"; state.sess = null;
+  var pr = PROGRAMAS[state.programa] || {nome:state.programa};
+  viewEl.innerHTML = '<div class="note"><h1>'+esc(pr.nome)+'</h1>'+
+    '<p>Este programa ainda não tem treinos. Monte-o no bloco <b>PROGRAMAS</b> do index.html, no mesmo formato do programa Masculino. Enquanto isso, toque no nome no topo para trocar de pessoa.</p></div>';
+  renderTabs(); renderProgress();
+  window.scrollTo(0,0);
+}
+
 function go(id){
+  if(id === "PERFIL" || !state.perfil) return renderPerfil();   /* sem perfil não há onde gravar */
+  if(!WORKOUTS.length) return renderVazio();
   if(id === "HIST") return renderHist();
   if(id === "REST") return renderRest();
   renderWorkout(id);
@@ -807,10 +1020,20 @@ function go(id){
 
 /* ---------------------- eventos ---------------------- */
 document.addEventListener("click", function(ev){
-  var t = ev.target.closest("[data-go],[data-chk],[data-illu],[data-h],#reset,#wipe");
+  var t = ev.target.closest("[data-go],[data-chk],[data-illu],[data-h],[data-perfil],[data-delperfil],#reset,#wipe");
   if(!t) return;
 
   if(t.hasAttribute("data-go")) return go(t.getAttribute("data-go"));
+
+  if(t.hasAttribute("data-perfil")) return entrar(t.getAttribute("data-perfil"));
+
+  if(t.hasAttribute("data-delperfil")){
+    var nm = t.getAttribute("data-delperfil");
+    if(confirm('Remover "'+nm+'" e TODO o histórico dessa pessoa?\nIsso não pode ser desfeito.')){
+      delPerfil(nm); renderPerfil();
+    }
+    return;
+  }
 
   if(t.hasAttribute("data-illu")){
     var open = t.getAttribute("data-open") === "1" ? "0" : "1";
@@ -835,8 +1058,9 @@ document.addEventListener("click", function(ev){
   }
 
   if(t.id === "wipe"){
-    if(confirm("Apagar TODO o histórico de treinos?\nIsso não pode ser desfeito.")){
-      LS.keys().forEach(function(k){ if(k && k.indexOf(PREFIX)===0 && k.split(":").length===3) LS.del(k); });
+    if(confirm('Apagar TODO o histórico de "'+state.perfil+'"?\nOs outros nomes não são afetados. Isso não pode ser desfeito.')){
+      var pre = perfilKey();
+      LS.keys().forEach(function(k){ if(k && k.indexOf(pre)===0) LS.del(k); });
       renderHist();
     }
     return;
@@ -950,6 +1174,16 @@ var autoChk = document.getElementById("autochk");
 autoChk.checked = LS.get(PREFIX+"auto") !== "0";
 autoChk.addEventListener("change", function(){ LS.set(PREFIX+"auto", autoChk.checked ? "1" : "0"); });
 
+/* ---------------------- app instalável (PWA) ----------------------
+   O service worker (sw.js) guarda a página em cache: o Android passa a
+   oferecer "Instalar app" e o treino abre sem internet. Só roda em http(s);
+   abrindo o arquivo local ele é ignorado. */
+if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){
+  window.addEventListener("load", function(){
+    navigator.serviceWorker.register("sw.js").catch(function(){});
+  });
+}
+
 /* ---------------------- boot ---------------------- */
 (function(){
   var d = new Date();
@@ -959,8 +1193,14 @@ autoChk.addEventListener("change", function(){ LS.set(PREFIX+"auto", autoChk.che
     warn.style.cssText = "background:#5a2a2a;color:#ffd7d7;font-size:14px;padding:6px 12px;text-align:center";
     warn.textContent = "Armazenamento bloqueado pelo navegador: o histórico não será salvo.";
     document.getElementById("topbar").appendChild(warn);
-    document.body.style.paddingTop = "150px";
+    document.body.style.paddingTop = "158px";
   }
+  /* perfil salvo e ainda existente → entra direto; senão pede o nome */
+  var salvo = LS.get(PREFIX+"perfil");
+  if(salvo && perfis().indexOf(salvo) >= 0) state.perfil = salvo;
+  if(!state.perfil){ renderPerfil(); return; }
+  usarPrograma(progDe(state.perfil));
+  if(!WORKOUTS.length){ renderVazio(); return; }
   var w = SCHEDULE[d.getDay()];
   if(w && wkById(w)) renderWorkout(w); else renderRest();
 })();
