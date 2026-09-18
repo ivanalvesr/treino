@@ -734,21 +734,28 @@ function allSess(){
   out.sort(function(a,b){ return a.d<b.d ? 1 : (a.d>b.d ? -1 : 0); });   /* mais recente primeiro */
   return out;
 }
-/* última execução registrada: mesmo treino, mesmo exercício, mesma série */
+/* Última execução registrada daquele exercício, de outro dia.
+   Procura primeiro no mesmo treino (A1 com A1) e, se não achar, em
+   qualquer treino que tenha o mesmo exercício — útil quando um exercício
+   aparece em mais de um dia do programa. */
 function lastFor(w, exName, setIdx, skipDate){
   var list = allSess();
-  for(var i=0;i<list.length;i++){
-    var s = list[i];
-    if(s.w!==w || s.d===skipDate) continue;
-    var arr = s.e[exName];
-    if(!arr) continue;
-    var e = arr[setIdx];
-    if(e && (e.l || e.r)) return { l:e.l, r:e.r, d:s.d };
-    for(var j=arr.length-1;j>=0;j--){          /* fallback: última série preenchida daquele dia */
-      if(arr[j] && (arr[j].l || arr[j].r)) return { l:arr[j].l, r:arr[j].r, d:s.d, approx:true };
+  function buscar(mesmoTreino){
+    for(var i=0;i<list.length;i++){
+      var s = list[i];
+      if(s.d===skipDate) continue;
+      if(mesmoTreino ? (s.w!==w) : (s.w===w)) continue;
+      var arr = s.e[exName];
+      if(!arr) continue;
+      var e = arr[setIdx];
+      if(e && (e.l || e.r)) return { l:e.l, r:e.r, d:s.d, w:s.w };
+      for(var j=arr.length-1;j>=0;j--){        /* fallback: última série preenchida daquele dia */
+        if(arr[j] && (arr[j].l || arr[j].r)) return { l:arr[j].l, r:arr[j].r, d:s.d, w:s.w, approx:true };
+      }
     }
+    return null;
   }
-  return null;
+  return buscar(true) || buscar(false);
 }
 
 /* ---------------------- progressão sugerida ----------------------
@@ -1140,9 +1147,37 @@ document.addEventListener("click", function(ev){
 
 /* campos de carga / reps */
 var saveTid = null;
+
+/* Copia o valor da 1ª série para as demais do mesmo exercício.
+   Só preenche série vazia ou que ainda esteja com a cópia automática
+   (data-auto="1"); o que você digitou à mão nunca é sobrescrito.
+   Corrigir a 1ª série atualiza as cópias que você não editou. */
+function copiarPrimeira(card, campo){
+  if(!card || !state.sess) return;
+  var name = card.getAttribute("data-ex");
+  var sets = setsOf(wkById(state.view), name);
+  var origem = card.querySelector('input[data-f="'+campo+'"][data-i="0"]');
+  if(!origem) return;
+  var v = origem.value.trim();
+  if(!v) return;
+  var mudou = false;
+  for(var i=1;i<sets;i++){
+    var alvo = card.querySelector('input[data-f="'+campo+'"][data-i="'+i+'"]');
+    if(!alvo) continue;
+    if(alvo.value.trim() && alvo.getAttribute("data-auto") !== "1") continue;  /* digitado à mão: respeita */
+    if(alvo.value === v) continue;
+    alvo.value = v;
+    alvo.setAttribute("data-auto", "1");
+    entry(state.sess, name, sets, i)[campo] = v;
+    mudou = true;
+  }
+  if(mudou) saveSess(state.sess);
+}
+
 document.addEventListener("input", function(ev){
   var el = ev.target;
   if(!el.getAttribute || !el.hasAttribute("data-f") || !state.sess) return;
+  el.setAttribute("data-auto", "0");            /* digitou: passa a valer como manual */
   var name = el.closest(".card").getAttribute("data-ex");
   var sets = setsOf(wkById(state.view), name);
   var e = entry(state.sess, name, sets, +el.getAttribute("data-i"));
@@ -1151,7 +1186,10 @@ document.addEventListener("input", function(ev){
   saveTid = setTimeout(function(){ saveSess(state.sess); }, 250);
 });
 document.addEventListener("change", function(ev){
-  if(ev.target.hasAttribute && ev.target.hasAttribute("data-f") && state.sess) saveSess(state.sess);
+  var el = ev.target;
+  if(!el.hasAttribute || !el.hasAttribute("data-f") || !state.sess) return;
+  saveSess(state.sess);
+  if(el.getAttribute("data-i") === "0") copiarPrimeira(el.closest(".card"), el.getAttribute("data-f"));
 });
 /* Enter fecha o teclado */
 document.addEventListener("keydown", function(ev){
