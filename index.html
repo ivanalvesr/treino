@@ -140,6 +140,11 @@ main{padding:12px 10px 0}
 .hex b{display:block;font-size:15px;font-weight:700}
 .hex span{color:var(--amber);font-weight:600;font-size:15px}
 .empty{color:var(--fg2);padding:20px 4px;font-size:16px}
+/* cópia de segurança */
+.backup{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:10px 10px 12px;margin:14px 2px 0}
+.bkcap{font-size:14px;color:var(--fg2);margin-bottom:8px}
+.restaurar{background:#1f3a2a;color:#c8f2d8;font-size:14px;padding:8px 12px;text-align:center;line-height:1.35}
+.restaurar button{margin-left:8px;min-height:32px;padding:0 12px;border-radius:8px;background:var(--done);color:#04200f;border:0;font-weight:700;font-size:14px;cursor:pointer}
 
 /* perfis (quem treina) */
 #head .who{display:flex;align-items:center;gap:6px;min-height:var(--tap);max-width:62vw;margin:-8px 0 -6px -8px;padding:0 8px;background:transparent;border:0;color:var(--fg);font-size:17px;font-weight:700;cursor:pointer;text-align:left}
@@ -864,6 +869,134 @@ function migrarLegado(nome){
   });
 }
 
+/* ==================== PROTEÇÃO DOS DADOS ====================
+   Regra do projeto: publicar versão nova NUNCA pode apagar treino.
+   Como isso é garantido, e não só prometido:
+
+   1. Deploy não encosta nos dados. O histórico vive no localStorage, que é
+      um armazenamento separado do cache do service worker. Trocar o HTML
+      publicado não mexe em nada gravado no aparelho.
+   2. O formato das chaves é versionado (SCHEMA). Renomear chave só pode
+      acontecer dentro de migrar(), e migrar() sempre tira uma cópia antes.
+   3. Cópia automática em tw1:backup: refeita a cada 7 dias e antes de
+      qualquer migração. Ela NUNCA é sobrescrita por um conjunto menor do
+      que o que já guarda — se algo apagar os dados, a cópia sobrevive.
+   4. Se o app abrir sem nenhuma sessão e houver cópia com sessões, aparece
+      uma faixa oferecendo restaurar. Nada é restaurado sem você mandar.
+   5. Exportar/importar arquivo na tela de histórico, para levar o
+      histórico para outro aparelho ou guardar fora do navegador.
+   O único jeito de perder dados continua sendo "limpar dados do site" no
+   navegador — por isso o item 5 existe.                                    */
+var SCHEMA = 2;   /* 1 = sessões sem perfil · 2 = sessões por perfil */
+
+function chavesDados(){
+  return LS.keys().filter(function(k){
+    return k && k.indexOf(PREFIX)===0 && k !== PREFIX+"backup";
+  });
+}
+function coletarDados(){
+  var o = {};
+  chavesDados().forEach(function(k){ var v = LS.get(k); if(v !== null) o[k] = v; });
+  return o;
+}
+function contarSessoes(dados){
+  return Object.keys(dados || {}).filter(function(k){ return k.indexOf(PREFIX+"s:")===0; }).length;
+}
+function lerBackup(){
+  try{ var b = JSON.parse(LS.get(PREFIX+"backup")); return (b && b.dados) ? b : null; }catch(e){ return null; }
+}
+/* devolve false quando se recusa a sobrescrever uma cópia maior */
+function fazerBackup(motivo){
+  var atual = coletarDados(), b = lerBackup();
+  if(b && contarSessoes(atual) < contarSessoes(b.dados)) return false;
+  LS.set(PREFIX+"backup", JSON.stringify({ t:Date.now(), v:SCHEMA, motivo:motivo||"", dados:atual }));
+  return true;
+}
+function restaurarBackup(){
+  var b = lerBackup(); if(!b) return 0;
+  var n = 0;
+  Object.keys(b.dados).forEach(function(k){ LS.set(k, b.dados[k]); n++; });
+  return n;
+}
+function migrarSchema(){
+  var v = parseInt(LS.get(PREFIX+"schema"), 10);
+  if(!v){
+    var legado = chavesDados().some(function(k){ return /^tw1:\d{4}-\d{2}-\d{2}:/.test(k); });
+    v = legado ? 1 : SCHEMA;
+  }
+  if(v !== SCHEMA){
+    fazerBackup("antes de migrar do formato "+v+" para "+SCHEMA);
+    /* 1 -> 2: sessões sem perfil são adotadas pelo primeiro perfil criado,
+       o que migrarLegado() já faz. Nada a apagar aqui. */
+  }
+  LS.set(PREFIX+"schema", String(SCHEMA));
+}
+/* faixa de restauro quando os dados sumiram mas a cópia existe */
+function ofereceRestauro(b){
+  var el = document.createElement("div");
+  el.className = "restaurar";
+  el.innerHTML = 'Encontrei uma cópia com '+plural(contarSessoes(b.dados),"sessão","sessões")+
+    ' de '+brDate(isoDate(new Date(b.t)),true)+'. <button id="btrest">Restaurar</button>';
+  document.getElementById("topbar").appendChild(el);
+  document.body.style.paddingTop = "170px";
+  document.getElementById("btrest").addEventListener("click", function(){
+    if(confirm("Restaurar a cópia de segurança? Os dados atuais do aparelho são substituídos pelos da cópia.")){
+      restaurarBackup();
+      location.reload();
+    }
+  });
+}
+function protegerDados(){
+  migrarSchema();
+  var b = lerBackup(), nAtual = contarSessoes(coletarDados());
+  if(b && nAtual === 0 && contarSessoes(b.dados) > 0) return ofereceRestauro(b);
+  if(!b || (Date.now() - (b.t||0)) > 7*86400000) fazerBackup("cópia periódica");
+}
+
+/* ---- exportar / importar arquivo ---- */
+function exportarJSON(){
+  var pacote = { app:"treino", v:SCHEMA, t:Date.now(), dados:coletarDados() };
+  try{
+    var blob = new Blob([JSON.stringify(pacote)], {type:"application/json"});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "treino-" + isoDate(new Date()) + ".json";
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.parentNode.removeChild(a); }, 2000);
+  }catch(e){ alert("Não consegui gerar o arquivo neste navegador."); }
+}
+/* importar UNE com o que já existe: sessão nova entra, sessão repetida só
+   substitui se a do arquivo for mais recente. Nada é apagado. */
+function importarJSON(texto){
+  var obj;
+  try{ obj = JSON.parse(texto); }catch(e){ alert("Arquivo inválido."); return; }
+  if(!obj || !obj.dados){ alert("Este arquivo não é uma cópia do Treino."); return; }
+  fazerBackup("antes de importar arquivo");
+  var novas = 0, atualizadas = 0;
+  Object.keys(obj.dados).forEach(function(k){
+    if(k.indexOf(PREFIX)!==0 || k === PREFIX+"backup") return;
+    if(k === PREFIX+"perfil" || k === PREFIX+"schema" || k === PREFIX+"auto") return;
+    if(k === PREFIX+"perfis"){                        /* une as listas de nomes */
+      try{
+        var minha = perfis(), dele = JSON.parse(obj.dados[k]) || [];
+        dele.forEach(function(p){
+          if(!minha.some(function(q){ return q.toLowerCase()===String(p).toLowerCase(); })) minha.push(p);
+        });
+        savePerfis(minha);
+      }catch(e){}
+      return;
+    }
+    var atual = LS.get(k);
+    if(atual === null){ LS.set(k, obj.dados[k]); novas++; return; }
+    try{
+      var a = JSON.parse(atual), d = JSON.parse(obj.dados[k]);
+      if(a && d && (d.t||0) > (a.t||0)){ LS.set(k, obj.dados[k]); atualizadas++; }
+    }catch(e){}
+  });
+  alert("Cópia restaurada.\n"+novas+" sessões novas, "+atualizadas+" atualizadas.\nNada foi apagado.");
+  location.reload();
+}
+
 /* ---------------------- estado ---------------------- */
 var state = { date: isoDate(new Date()), view: null, sess: null, perfil: null, programa: null };
 
@@ -1032,6 +1165,15 @@ function renderHist(){
       html += '</div></div>';
     });
   }
+  var bk = lerBackup();
+  html += '<div class="backup">'+
+      '<div class="bkcap">Cópia de segurança'+(bk ? ' &middot; automática em '+brDate(isoDate(new Date(bk.t)),true) : '')+'</div>'+
+      '<div class="actions" style="margin:0">'+
+        '<button class="btn" id="exportar">Salvar em arquivo</button>'+
+        '<button class="btn" id="importar">Restaurar de arquivo</button>'+
+      '</div>'+
+      '<input type="file" id="arqimp" accept="application/json,.json" style="display:none">'+
+    '</div>';
   html += '<div class="actions"><button class="btn danger" id="wipe">Apagar todo o histórico</button></div>';
   viewEl.innerHTML = html;
   renderTabs(); renderProgress();
@@ -1099,8 +1241,19 @@ function go(id){
 
 /* ---------------------- eventos ---------------------- */
 document.addEventListener("click", function(ev){
-  var t = ev.target.closest("[data-go],[data-chk],[data-illu],[data-h],[data-perfil],[data-delperfil],#reset,#wipe");
+  var t = ev.target.closest("[data-go],[data-chk],[data-illu],[data-h],[data-perfil],[data-delperfil],#reset,#wipe,#exportar,#importar");
   if(!t) return;
+
+  if(t.id === "exportar") return exportarJSON();
+  if(t.id === "importar"){
+    var inp = document.getElementById("arqimp");
+    inp.onchange = function(){
+      var f = inp.files && inp.files[0];
+      if(f){ var fr = new FileReader(); fr.onload = function(){ importarJSON(fr.result); }; fr.readAsText(f); }
+    };
+    inp.click();
+    return;
+  }
 
   if(t.hasAttribute("data-go")) return go(t.getAttribute("data-go"));
 
@@ -1307,6 +1460,7 @@ if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){
 (function(){
   var d = new Date();
   document.getElementById("today").textContent = DIAS[d.getDay()] + ", " + pad(d.getDate()) + "/" + pad(d.getMonth()+1);
+  protegerDados();          /* versiona o formato, mantém cópia, oferece restauro */
   if(!LS.ok){
     var warn = document.createElement("div");
     warn.style.cssText = "background:#5a2a2a;color:#ffd7d7;font-size:14px;padding:6px 12px;text-align:center";
