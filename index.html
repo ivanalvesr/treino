@@ -1292,6 +1292,15 @@ if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){
   window.addEventListener("load", function(){
     navigator.serviceWorker.register("sw.js").catch(function(){});
   });
+  /* Quando um service worker novo assume o controle, a página recarrega uma
+     única vez para já mostrar a versão publicada, em vez de esperar a próxima
+     abertura do app. O trinco evita qualquer laço de recarga. */
+  var recarregou = false;
+  navigator.serviceWorker.addEventListener("controllerchange", function(){
+    if(recarregou) return;
+    recarregou = true;
+    location.reload();
+  });
 }
 
 /* ---------------------- boot ---------------------- */
