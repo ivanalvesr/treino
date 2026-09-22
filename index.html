@@ -163,6 +163,15 @@ main{padding:12px 10px 0}
 .pgbar i{display:block;height:100%;border-radius:3px;background:var(--fg2)}
 .pgbar i.up{background:var(--done)} .pgbar i.down{background:var(--danger)}
 .pgnota{font-size:13px;color:var(--fg2);line-height:1.45;margin:14px 4px 4px}
+.pgsec{font-size:14px;font-weight:700;color:var(--fg2);margin:18px 4px 8px;text-transform:uppercase;letter-spacing:.4px}
+.pgitem.geral{border-color:var(--accent)}
+.pgchart{width:100%;height:72px;display:block;margin-top:8px;overflow:visible}
+.pgchart .linha{fill:none;stroke:var(--fg2);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.pgchart .zero{stroke:var(--line);stroke-width:1;stroke-dasharray:4 4;vector-effect:non-scaling-stroke}
+.pgchart circle{fill:var(--fg2)}
+.pgitem.up .pgchart .linha{stroke:var(--done)} .pgitem.up .pgchart circle{fill:var(--done)}
+.pgitem.down .pgchart .linha{stroke:var(--danger)} .pgitem.down .pgchart circle{fill:var(--danger)}
+.pgeixo{display:flex;justify-content:space-between;font-size:12px;color:var(--fg2);margin-top:2px}
 
 /* cópia de segurança */
 .backup{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:10px 10px 12px;margin:14px 2px 0}
@@ -1308,6 +1317,74 @@ function relatorio(){
   return { itens:itens, indice:indice, sessoes:datas.length, series:series, volume:volume,
            de:datas[0], ate:datas[datas.length-1], semanas:semanas, medidos:comDelta.length };
 }
+/* grupamento de um exercício: procura primeiro no programa ativo, depois em
+   qualquer programa — assim exercício que saiu do treino continua classificado */
+function grupoDe(nome){
+  var chaves = [state.programa].concat(Object.keys(PROGRAMAS));
+  for(var i=0;i<chaves.length;i++){
+    var p = PROGRAMAS[chaves[i]]; if(!p) continue;
+    for(var j=0;j<p.treinos.length;j++){
+      var ex = p.treinos[j].ex;
+      for(var k=0;k<ex.length;k++) if(ex[k][1] === nome) return ex[k][0];
+    }
+  }
+  return "Outros";
+}
+/* linha do tempo do índice por grupamento: em cada data de treino, a marca
+   mais recente de cada exercício é comparada com a primeira dele, e o grupo
+   recebe a média dos seus exercícios. Exercício não treinado naquele dia
+   mantém a última marca, então a linha não oscila à toa. */
+function evolucaoPorGrupo(){
+  var list = allSess().slice().sort(function(a,b){ return a.d < b.d ? -1 : (a.d > b.d ? 1 : 0); });
+  var estado = {}, linha = [];
+  list.forEach(function(s){
+    Object.keys(s.e).forEach(function(nome){
+      var melhor = null, maxReps = 0;
+      s.e[nome].forEach(function(k){
+        if(!k) return;
+        var R = parseInt(k.r, 10); if(R) maxReps = Math.max(maxReps, R);
+        var e = e1rm(k.l, k.r);
+        if(e !== null && (melhor === null || e > melhor)) melhor = e;
+      });
+      var v = melhor !== null ? melhor : (maxReps || null);
+      if(v === null) return;
+      if(!estado[nome]) estado[nome] = { base:v, atual:v };
+      else estado[nome].atual = v;
+    });
+    var acc = {};
+    Object.keys(estado).forEach(function(nome){
+      var st = estado[nome], g = grupoDe(nome);
+      (acc[g] = acc[g] || []).push(st.base > 0 ? (st.atual - st.base)/st.base*100 : 0);
+    });
+    var foto = {};
+    Object.keys(acc).forEach(function(g){
+      foto[g] = acc[g].reduce(function(a,b){ return a+b; }, 0) / acc[g].length;
+    });
+    var todos = Object.keys(foto).map(function(g){ return foto[g]; });
+    foto["Geral"] = todos.length ? todos.reduce(function(a,b){ return a+b; },0)/todos.length : 0;
+    if(linha.length && linha[linha.length-1].d === s.d) linha[linha.length-1].g = foto;
+    else linha.push({ d:s.d, g:foto });
+  });
+  return linha;
+}
+/* mini-gráfico de linha, SVG inline: eixo do tempo em dias, zero tracejado */
+function grafico(pontos){
+  if(pontos.length < 2) return "";
+  var W = 320, H = 72, ML = 4, MR = 4, MT = 9, MB = 9;
+  var x0 = pontos[0].x, xn = pontos[pontos.length-1].x, span = Math.max(1, xn - x0);
+  var vals = pontos.map(function(p){ return p.y; }).concat([0]);
+  var min = Math.min.apply(null, vals), max = Math.max.apply(null, vals);
+  if(max - min < 5) max = min + 5;
+  var px = function(x){ return Math.round((ML + (x - x0)/span*(W - ML - MR))*10)/10; };
+  var py = function(y){ return Math.round((MT + (max - y)/(max - min)*(H - MT - MB))*10)/10; };
+  var pts = pontos.map(function(p){ return px(p.x)+","+py(p.y); }).join(" ");
+  return '<svg class="pgchart" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" aria-hidden="true">'+
+    '<line class="zero" x1="'+ML+'" y1="'+py(0)+'" x2="'+(W-MR)+'" y2="'+py(0)+'"/>'+
+    '<polyline class="linha" points="'+pts+'"/>'+
+    pontos.map(function(p){ return '<circle cx="'+px(p.x)+'" cy="'+py(p.y)+'" r="3"/>'; }).join("")+
+  '</svg>';
+}
+
 function fmtDelta(d){ return (d >= 0 ? "+" : "") + (Math.round(d*10)/10).toString().replace(".", ",") + "%"; }
 function classeDelta(d){ return d >= 2 ? "up" : (d <= -2 ? "down" : "flat"); }
 
@@ -1330,6 +1407,34 @@ function renderProgresso(){
       '<span><b>'+r.series+'</b> séries</span>'+
       '<span><b>'+(Math.round(r.volume/100)/10).toString().replace(".", ",")+'</b> t levantadas</span>'+
     '</div></div>';
+
+  /* ---- gráficos de evolução por grupamento ---- */
+  var linha = evolucaoPorGrupo();
+  if(linha.length >= 2){
+    var grupos = {};
+    linha.forEach(function(p){ Object.keys(p.g).forEach(function(g){ grupos[g] = true; }); });
+    var ordem = Object.keys(grupos).sort(function(a,b){
+      if(a === "Geral") return -1; if(b === "Geral") return 1;
+      var ua = linha[linha.length-1].g[a] || 0, ub = linha[linha.length-1].g[b] || 0;
+      return ub - ua;
+    });
+    html += '<div class="pgsec">Evolução no tempo</div>';
+    ordem.forEach(function(g){
+      var pontos = [];
+      linha.forEach(function(p){
+        if(p.g[g] === undefined) return;
+        pontos.push({ x: diasEntre(linha[0].d, p.d), y: p.g[g] });
+      });
+      if(pontos.length < 2) return;
+      var atual = pontos[pontos.length-1].y;
+      html += '<div class="pgitem '+(g === "Geral" ? "geral " : "")+classeDelta(atual)+'">'+
+        '<div class="pgtop"><b>'+esc(g)+'</b><span class="pgdelta '+classeDelta(atual)+'">'+fmtDelta(atual)+'</span></div>'+
+        grafico(pontos)+
+        '<div class="pgeixo"><span>'+brDate(linha[0].d)+'</span><span>'+brDate(linha[linha.length-1].d)+'</span></div>'+
+      '</div>';
+    });
+    html += '<div class="pgsec">Por exercício</div>';
+  }
 
   var maxAbs = 1;
   r.itens.forEach(function(i){ if(!i.novo) maxAbs = Math.max(maxAbs, Math.abs(i.delta)); });
