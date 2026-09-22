@@ -74,6 +74,7 @@ main{padding:12px 10px 0}
 .pill.grp{background:#27303d;color:var(--accent)}
 .pill.rir{background:#3a2f16;color:var(--amber)}
 .pill.opc{background:transparent;color:var(--fg2);border:1px dashed var(--fg2);font-weight:700;letter-spacing:.3px}
+.pill.apa{background:#2b2536;color:#cbb6f0}   /* aparelho/estação */
 /* orientação de progressão (texto de personal): dica por exercício e ciclo de 15 dias */
 .ciclo{font-size:14px;color:var(--fg2);margin:-4px 2px 12px;line-height:1.35}
 .dica{margin-top:8px;padding:8px 10px;border-radius:8px;font-size:14px;line-height:1.35;background:var(--card2);color:var(--fg2)}
@@ -610,12 +611,12 @@ var PROGRAMAS = {
     ["Quadríceps",  "Hack squat",                    3, "6–10",  "2"],
     ["Peito",       "Supino inclinado com halteres", 3, "6–10",  "2"],
     ["Costas",      "Puxada frontal pronada",        3, "8–12",  "2"],
+    ["Ombros",      "Elevação lateral na polia",     2, "12–20", "1"],
+    ["Tríceps",     "Tríceps na polia",              2, "10–15", "1–2"],
     ["Quadríceps",  "Cadeira extensora",             2, "12–15", "1–2"],
     ["Posterior",   "Mesa flexora",                  2, "10–15", "1–2"],
-    ["Ombros",      "Elevação lateral na polia",     2, "12–20", "1"],
-    ["Bíceps",      "Rosca direta",                  2, "8–12",  "1–2"],
-    ["Tríceps",     "Tríceps na polia",              2, "10–15", "1–2"],
-    ["Panturrilha", "Panturrilha em pé",             2, "8–12",  "1–2"]
+    ["Panturrilha", "Panturrilha em pé",             2, "8–12",  "1–2"],
+    ["Bíceps",      "Rosca direta",                  2, "8–12",  "1–2"]
   ]},
   { id:"B1", nome:"B1", dia:"Terça", ex:[
     ["Posterior",   "Stiff com halteres",            3, "8–12",  "2"],
@@ -634,9 +635,9 @@ var PROGRAMAS = {
     ["Costas",      "Puxada neutra",                 3, "8–12",  "2"],
     ["Posterior",   "Flexora sentada",               2, "10–15", "1–2"],
     ["Ombros",      "Elevação lateral máquina",      2, "12–20", "1"],
+    ["Panturrilha", "Panturrilha sentada",           2, "12–15", "1–2"],
     ["Bíceps",      "Rosca Scott",                   2, "10–15", "1–2"],
-    ["Tríceps",     "Tríceps testa com barra",       2, "10–15", "1–2"],
-    ["Panturrilha", "Panturrilha sentada",           2, "12–15", "1–2"]
+    ["Tríceps",     "Tríceps testa com barra",       2, "10–15", "1–2"]
   ]},
   { id:"B2", nome:"B2", dia:"Quinta", ex:[
     ["Posterior",   "Hiperextensão no banco 45°",    3, "8–12",  "2–3"],
@@ -644,8 +645,8 @@ var PROGRAMAS = {
     ["Peito",       "Mergulho nas paralelas",        3, "8–12",  "2–3"],
     ["Quadríceps",  "Afundo com halteres",           2, "10–12", "1–2"],
     ["Ombros",      "Elevação lateral",              2, "12–20", "1"],
-    ["Delt. post.", "Face pull",                     2, "15–20", "1"],
     ["Bíceps",      "Rosca inclinada",               2, "10–15", "1–2"],
+    ["Delt. post.", "Face pull",                     2, "15–20", "1"],
     ["Tríceps",     "Tríceps coice na polia",        2, "10–15", "1–2"],
     ["Core",        "Abdominal na polia",            2, "10–15", "1–2", true]
   ]}
@@ -664,26 +665,26 @@ var PROGRAMAS = {
     ["Glúteos",     "Elevação pélvica (hip thrust)",        4, "8–12",  "2"],
     ["Posterior",   "Stiff com halteres",                   3, "8–12",  "2"],
     ["Posterior",   "Mesa flexora",                         3, "10–15", "1–2"],
-    ["Glúteos",     "Coice na polia (extensão de quadril)", 3, "12–15", "1"],
     ["Panturrilha", "Panturrilha em pé",                    3, "8–12",  "1–2"],
+    ["Glúteos",     "Coice na polia (extensão de quadril)", 3, "12–15", "1"],
     ["Core",        "Abdominal na polia",                   2, "10–15", "1–2", true]
   ]},
   { id:"B1", nome:"B1", dia:"Terça · superior", ex:[
     ["Costas",      "Puxada frontal pronada",               3, "8–12",  "2"],
-    ["Peito",       "Supino inclinado com halteres",        3, "8–12",  "2"],
     ["Costas",      "Remada baixa neutra",                  3, "8–12",  "2"],
+    ["Peito",       "Supino inclinado com halteres",        3, "8–12",  "2"],
     ["Peito",       "Supino máquina",                       2, "10–15", "2"],
     ["Ombros",      "Desenvolvimento máquina",              2, "8–12",  "2"],
-    ["Ombros",      "Elevação lateral",                     3, "12–20", "1"],
     ["Delt. post.", "Crucifixo inverso",                    2, "12–20", "1"],
+    ["Ombros",      "Elevação lateral",                     3, "12–20", "1"],
     ["Bíceps",      "Rosca direta",                         2, "10–15", "1–2"],
     ["Tríceps",     "Tríceps na polia",                     2, "10–15", "1–2"],
     ["Core",        "Ab wheel",                             2, "8–12",  "1–2", true]
   ]},
   { id:"A2", nome:"A2", dia:"Quarta · quadríceps", ex:[
     ["Quadríceps",  "Agachamento no Smith",                 4, "8–12",  "2–3"],
-    ["Quadríceps",  "Leg press",                            3, "10–15", "2"],
     ["Glúteos",     "Afundo com halteres",                  3, "10–12", "1–2"],
+    ["Quadríceps",  "Leg press",                            3, "10–15", "2"],
     ["Quadríceps",  "Cadeira extensora",                    3, "12–15", "1–2"],
     ["Posterior",   "Flexora sentada",                      3, "10–15", "1–2"],
     ["Panturrilha", "Panturrilha sentada",                  3, "12–15", "1–2"]
@@ -756,6 +757,34 @@ var ILLU = {
   "Afundo com halteres":                  "ex-afundo",
   "Cadeira abdutora":                     "ex-abdutora",
   "Coice na polia (extensão de quadril)": "ex-gluteo-coice"
+};
+
+/* Aparelho de cada exercício. Aparece como selo no card e é o que permite
+   agrupar os exercícios por estação, para não ficar indo e voltando na
+   academia. Exercício sem entrada aqui simplesmente não mostra o selo.
+   Ajuste à vontade se na sua academia o aparelho for outro. */
+var APARELHO = {
+  "Hack squat":"máquina", "Agachamento no Smith":"Smith", "Leg press":"máquina",
+  "Cadeira extensora":"máquina", "Flexora sentada":"máquina", "Mesa flexora":"máquina",
+  "Cadeira abdutora":"máquina", "Panturrilha em pé":"máquina", "Panturrilha sentada":"máquina",
+  "Stiff com halteres":"halteres", "Stiff na barra ou Smith":"barra",
+  "Elevação pélvica (hip thrust)":"barra", "Hiperextensão no banco 45°":"peso do corpo",
+  "Afundo com halteres":"halteres", "Agachamento búlgaro":"halteres",
+  "Coice na polia (extensão de quadril)":"polia",
+  "Supino inclinado com halteres":"halteres", "Supino máquina":"máquina",
+  "Chest press máquina":"máquina", "Supino inclinado máquina":"máquina",
+  "Crucifixo na máquina (peck deck)":"máquina", "Mergulho nas paralelas":"peso do corpo",
+  "Desenvolvimento máquina":"máquina",
+  "Puxada frontal pronada":"polia", "Puxada neutra":"polia", "Remada baixa neutra":"polia",
+  "Remada com peito apoiado":"máquina",
+  "Elevação lateral":"halteres", "Elevação lateral na polia":"polia",
+  "Elevação lateral máquina":"máquina", "Crucifixo inverso":"máquina", "Face pull":"polia",
+  "Rosca direta":"barra", "Rosca martelo":"halteres", "Rosca Scott":"barra",
+  "Rosca inclinada":"halteres",
+  "Tríceps na polia":"polia", "Tríceps corda":"polia", "Tríceps polia unilateral":"polia",
+  "Tríceps coice na polia":"polia", "Tríceps acima da cabeça":"halteres",
+  "Tríceps testa com barra":"barra",
+  "Ab wheel":"peso do corpo", "Abdominal na polia":"polia"
 };
 
 /* ======================= FIM DO BLOCO DE DADOS ======================= */
@@ -1148,6 +1177,7 @@ function renderWorkout(id){
         '<span class="pill grp">'+esc(grp)+'</span>'+
         '<span class="pill">'+sets+' &times; '+esc(reps)+'</span>'+
         '<span class="pill rir">RIR '+esc(rir)+'</span>'+
+        (APARELHO[name] ? '<span class="pill apa">'+esc(APARELHO[name])+'</span>' : '')+
         (opc ? '<span class="pill opc">opcional</span>' : '')+
       '</div>'+
       (dica ? '<div class="dica '+dica.tipo+'">'+esc(dica.txt)+'</div>' : '')+
