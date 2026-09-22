@@ -141,6 +141,29 @@ main{padding:12px 10px 0}
 .hex b{display:block;font-size:15px;font-weight:700}
 .hex span{color:var(--amber);font-weight:600;font-size:15px}
 .empty{color:var(--fg2);padding:20px 4px;font-size:16px}
+/* relatório de progressão */
+.seg{display:flex;gap:6px;margin:0 2px 14px}
+.seg button{flex:1;min-height:var(--tap);border-radius:10px;background:var(--card);color:var(--fg2);border:1px solid var(--line);font-size:15px;font-weight:700;cursor:pointer}
+.seg button.on{background:var(--accent);border-color:var(--accent);color:#06121f}
+.pgtopo{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 12px;margin:0 2px 14px;text-align:center}
+.pgidx{font-size:40px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
+.pgidx.up{color:var(--done)} .pgidx.down{color:var(--danger)} .pgidx.flat{color:var(--fg2)}
+.pgcap{font-size:14px;color:var(--fg2);margin-top:2px;line-height:1.35}
+.pgnums{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:14px;color:var(--fg2)}
+.pgnums b{color:var(--fg);font-size:17px}
+.pgitem{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px;margin:0 2px 8px}
+.pgtop{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.pgtop b{font-size:16px;line-height:1.25}
+.pgdelta{font-size:16px;font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
+.pgdelta.up{color:var(--done)} .pgdelta.down{color:var(--danger)} .pgdelta.flat{color:var(--fg2)}
+.pgsub{font-size:14px;color:var(--fg2);margin-top:5px;line-height:1.5}
+.pgseta{color:var(--fg)}
+.pgparado{display:inline-block;margin-left:4px;color:var(--amber)}
+.pgbar{height:5px;background:var(--bg);border-radius:3px;margin-top:8px;overflow:hidden}
+.pgbar i{display:block;height:100%;border-radius:3px;background:var(--fg2)}
+.pgbar i.up{background:var(--done)} .pgbar i.down{background:var(--danger)}
+.pgnota{font-size:13px;color:var(--fg2);line-height:1.45;margin:14px 4px 4px}
+
 /* cópia de segurança */
 .backup{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:10px 10px 12px;margin:14px 2px 0}
 .bkcap{font-size:14px;color:var(--fg2);margin-bottom:8px}
@@ -1085,7 +1108,7 @@ function importarJSON(texto){
 }
 
 /* ---------------------- estado ---------------------- */
-var state = { date: isoDate(new Date()), view: null, sess: null, perfil: null, programa: null };
+var state = { date: isoDate(new Date()), view: null, sess: null, perfil: null, programa: null, histAba: "sessoes" };
 
 function ensureSess(w){
   var s = loadSess(state.date, w);
@@ -1223,14 +1246,132 @@ function renderRest(){
   window.scrollTo(0,0);
 }
 
+/* ==================== RELATÓRIO DE PROGRESSÃO ====================
+   A métrica central é o 1RM estimado (fórmula de Epley: carga × (1 + reps/30)),
+   porque ela junta carga e repetições num número só: subir de 60kg×9 para
+   60kg×11 é progresso, e olhar só a carga não veria isso.
+   Para exercício sem carga (peso do corpo), o índice usa as repetições.
+   É estimativa para comparar você com você mesmo ao longo do tempo — não
+   serve para dizer quanto você levanta de verdade numa tentativa máxima.  */
+function e1rm(l, r){
+  var L = numKg(l), R = parseInt(r, 10);
+  if(L === null || !R) return null;
+  return L * (1 + R/30);
+}
+function relatorio(){
+  var list = allSess().slice().sort(function(a,b){ return a.d < b.d ? -1 : (a.d > b.d ? 1 : 0); });
+  var porEx = {}, series = 0, volume = 0, datas = [];
+  list.forEach(function(s){
+    if(datas.indexOf(s.d) < 0) datas.push(s.d);
+    Object.keys(s.e).forEach(function(nome){
+      var melhor = null, vol = 0, maxReps = 0;
+      s.e[nome].forEach(function(k){
+        if(!k) return;
+        if(k.c) series++;
+        var L = numKg(k.l), R = parseInt(k.r, 10);
+        if(R) maxReps = Math.max(maxReps, R);
+        if(L !== null && R){
+          vol += L * R;
+          var e = e1rm(k.l, k.r);
+          if(e !== null && (!melhor || e > melhor.e)) melhor = { e:e, l:L, r:R };
+        }
+      });
+      volume += vol;
+      if(!melhor && !maxReps) return;
+      (porEx[nome] = porEx[nome] || []).push({ d:s.d, melhor:melhor, reps:maxReps });
+    });
+  });
+
+  var itens = [];
+  Object.keys(porEx).forEach(function(nome){
+    var h = porEx[nome];
+    var comCarga = h.filter(function(x){ return x.melhor; });
+    var base = comCarga.length ? comCarga : h, tipo = comCarga.length ? "carga" : "reps";
+    if(base.length < 2) { itens.push({ nome:nome, sessoes:base.length, novo:true, ult:base[base.length-1], tipo:tipo }); return; }
+    var pri = base[0], ult = base[base.length-1];
+    var vPri = tipo === "carga" ? pri.melhor.e : pri.reps;
+    var vUlt = tipo === "carga" ? ult.melhor.e : ult.reps;
+    var delta = vPri > 0 ? (vUlt - vPri) / vPri * 100 : 0;
+    /* parado: melhor marca não é das duas últimas sessões */
+    var topo = 0, idxTopo = 0;
+    base.forEach(function(x, i){ var v = tipo === "carga" ? x.melhor.e : x.reps; if(v > topo){ topo = v; idxTopo = i; } });
+    var paradoHa = base.length - 1 - idxTopo;
+    itens.push({ nome:nome, sessoes:base.length, tipo:tipo, delta:delta, pri:pri, ult:ult, paradoHa:paradoHa });
+  });
+  itens.sort(function(a,b){
+    if(a.novo !== b.novo) return a.novo ? 1 : -1;
+    return (b.delta||0) - (a.delta||0);
+  });
+  var comDelta = itens.filter(function(i){ return !i.novo; });
+  var indice = comDelta.length ? comDelta.reduce(function(s,i){ return s + i.delta; }, 0) / comDelta.length : null;
+  var semanas = datas.length > 1 ? Math.max(1, Math.round(diasEntre(datas[0], datas[datas.length-1]) / 7)) : 0;
+  return { itens:itens, indice:indice, sessoes:datas.length, series:series, volume:volume,
+           de:datas[0], ate:datas[datas.length-1], semanas:semanas, medidos:comDelta.length };
+}
+function fmtDelta(d){ return (d >= 0 ? "+" : "") + (Math.round(d*10)/10).toString().replace(".", ",") + "%"; }
+function classeDelta(d){ return d >= 2 ? "up" : (d <= -2 ? "down" : "flat"); }
+
+function renderProgresso(){
+  var r = relatorio();
+  var html = '<div class="sechead"><h1>Progressão</h1><div class="sub">'+plural(r.sessoes,"sessão","sessões")+'</div></div>'+abaHist();
+  if(!r.sessoes){
+    html += '<div class="empty">Ainda não há treino registrado. Anote carga e repetições por algumas semanas e o relatório aparece aqui.</div>';
+    viewEl.innerHTML = html; renderTabs(); renderProgress(); window.scrollTo(0,0); return;
+  }
+  html += '<div class="pgtopo">'+
+    '<div class="pgidx '+(r.indice === null ? "flat" : classeDelta(r.indice))+'">'+
+      (r.indice === null ? "—" : fmtDelta(r.indice))+'</div>'+
+    '<div class="pgcap">'+(r.indice === null
+      ? "Faltam duas execuções do mesmo exercício para calcular o índice."
+      : "índice de progressão &middot; média de "+plural(r.medidos,"exercício","exercícios")+
+        (r.semanas ? " em "+plural(r.semanas,"semana","semanas") : ""))+'</div>'+
+    '<div class="pgnums">'+
+      '<span><b>'+r.sessoes+'</b> sessões</span>'+
+      '<span><b>'+r.series+'</b> séries</span>'+
+      '<span><b>'+(Math.round(r.volume/100)/10).toString().replace(".", ",")+'</b> t levantadas</span>'+
+    '</div></div>';
+
+  var maxAbs = 1;
+  r.itens.forEach(function(i){ if(!i.novo) maxAbs = Math.max(maxAbs, Math.abs(i.delta)); });
+  r.itens.forEach(function(i){
+    var apa = APARELHO[i.nome] ? '<span class="pill apa">'+esc(APARELHO[i.nome])+'</span>' : '';
+    if(i.novo){
+      html += '<div class="pgitem"><div class="pgtop"><b>'+esc(i.nome)+'</b><span class="pgdelta flat">1ª vez</span></div>'+
+        '<div class="pgsub">'+apa+' registrado em '+brDate(i.ult.d,true)+' &middot; precisa de outra execução para medir</div></div>';
+      return;
+    }
+    function marca(x){
+      return i.tipo === "carga" ? fmtKg(x.melhor.l)+"kg × "+x.melhor.r : x.reps+" reps";
+    }
+    var aviso = i.paradoHa >= 2 ? '<span class="pgparado">sem recorde há '+i.paradoHa+' sessões</span>' : '';
+    html += '<div class="pgitem">'+
+      '<div class="pgtop"><b>'+esc(i.nome)+'</b><span class="pgdelta '+classeDelta(i.delta)+'">'+fmtDelta(i.delta)+'</span></div>'+
+      '<div class="pgsub">'+apa+' '+marca(i.pri)+' <span class="pgseta">→</span> '+marca(i.ult)+
+        ' &middot; '+plural(i.sessoes,"sessão","sessões")+' '+aviso+'</div>'+
+      '<div class="pgbar"><i class="'+classeDelta(i.delta)+'" style="width:'+Math.round(Math.abs(i.delta)/maxAbs*100)+'%"></i></div>'+
+    '</div>';
+  });
+  html += '<div class="pgnota">O índice usa 1RM estimado (carga × (1 + reps ÷ 30)), que junta carga e repetições. '+
+          'Serve para comparar você com você mesmo — não é teste de força máxima.</div>';
+  viewEl.innerHTML = html;
+  renderTabs(); renderProgress();
+  window.scrollTo(0,0);
+}
+function abaHist(){
+  return '<div class="seg">'+
+    '<button data-hab="sessoes" class="'+(state.histAba !== "progresso" ? "on" : "")+'">Sessões</button>'+
+    '<button data-hab="progresso" class="'+(state.histAba === "progresso" ? "on" : "")+'">Progressão</button></div>';
+}
+
 function renderHist(){
   state.view = "HIST"; state.sess = null;
+  if(state.histAba === "progresso") return renderProgresso();
   var list = allSess().filter(function(s){
     var any = false;
     for(var k in s.e){ s.e[k].forEach(function(e){ if(e && (e.l||e.r||e.c)) any = true; }); }
     return any;
   });
-  var html = '<div class="sechead"><h1>Histórico</h1><div class="sub">'+plural(list.length,"sessão","sessões")+'</div></div>';
+  var html = '<div class="sechead"><h1>Histórico</h1><div class="sub">'+plural(list.length,"sessão","sessões")+'</div></div>'+abaHist();
   if(!list.length){
     html += '<div class="empty">Nenhuma sessão registrada ainda.</div>';
   } else {
@@ -1329,8 +1470,10 @@ function go(id){
 
 /* ---------------------- eventos ---------------------- */
 document.addEventListener("click", function(ev){
-  var t = ev.target.closest("[data-go],[data-chk],[data-illu],[data-h],[data-perfil],[data-delperfil],#reset,#wipe,#exportar,#importar");
+  var t = ev.target.closest("[data-go],[data-chk],[data-illu],[data-h],[data-perfil],[data-delperfil],[data-hab],#reset,#wipe,#exportar,#importar");
   if(!t) return;
+
+  if(t.hasAttribute("data-hab")){ state.histAba = t.getAttribute("data-hab"); return renderHist(); }
 
   if(t.id === "exportar") return exportarJSON();
   if(t.id === "importar"){
