@@ -1674,24 +1674,24 @@ document.addEventListener("click", function(ev){
 /* campos de carga / reps */
 var saveTid = null;
 
-/* Copia o valor da 1ª série para as demais do mesmo exercício.
-   Só preenche série vazia ou que ainda esteja com a cópia automática
-   (data-auto="1"); o que você digitou à mão nunca é sobrescrito.
-   Corrigir a 1ª série atualiza as cópias que você não editou. */
-function copiarPrimeira(card, campo){
+/* Propaga o valor de uma série para as de baixo, em cascata: cada série
+   vazia ou ainda com cópia automática (data-auto="1") passa a espelhar a
+   série imediatamente acima. Assim, mudar a carga ou as reps no meio do
+   exercício (ex.: subir na 2ª de 3) leva a mudança para a 3ª sem mexer
+   na 1ª. O que você digitou à mão nunca é sobrescrito — e uma série manual
+   vira a nova origem para as que vêm depois dela. */
+function propagarParaBaixo(card, campo, desde){
   if(!card || !state.sess) return;
   var name = card.getAttribute("data-ex");
   var sets = setsOf(wkById(state.view), name);
-  var origem = card.querySelector('input[data-f="'+campo+'"][data-i="0"]');
-  if(!origem) return;
-  var v = origem.value.trim();
-  if(!v) return;
   var mudou = false;
-  for(var i=1;i<sets;i++){
-    var alvo = card.querySelector('input[data-f="'+campo+'"][data-i="'+i+'"]');
-    if(!alvo) continue;
-    if(alvo.value.trim() && alvo.getAttribute("data-auto") !== "1") continue;  /* digitado à mão: respeita */
-    if(alvo.value === v) continue;
+  for(var i=desde+1;i<sets;i++){
+    var origem = card.querySelector('input[data-f="'+campo+'"][data-i="'+(i-1)+'"]');
+    var alvo   = card.querySelector('input[data-f="'+campo+'"][data-i="'+i+'"]');
+    if(!origem || !alvo) continue;
+    if(alvo.value.trim() && alvo.getAttribute("data-auto") !== "1") continue;  /* digitado à mão: respeita e vira origem */
+    var v = origem.value.trim();
+    if(!v || alvo.value === v) continue;
     alvo.value = v;
     alvo.setAttribute("data-auto", "1");
     entry(state.sess, name, sets, i)[campo] = v;
@@ -1715,7 +1715,7 @@ document.addEventListener("change", function(ev){
   var el = ev.target;
   if(!el.hasAttribute || !el.hasAttribute("data-f") || !state.sess) return;
   saveSess(state.sess);
-  if(el.getAttribute("data-i") === "0") copiarPrimeira(el.closest(".card"), el.getAttribute("data-f"));
+  propagarParaBaixo(el.closest(".card"), el.getAttribute("data-f"), +el.getAttribute("data-i"));
 });
 /* Enter fecha o teclado */
 document.addEventListener("keydown", function(ev){
