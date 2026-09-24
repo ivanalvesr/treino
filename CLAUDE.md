@@ -11,7 +11,7 @@ primeira abertura seguinte.
 |---|---|
 | `index.html` | **O app inteiro.** HTML + CSS + JS + ilustrações SVG, sem framework e sem dependência externa. |
 | `manifest.webmanifest`, `sw.js`, `icon-*.png` | PWA: instalável no Android e funciona offline. |
-| `teste-ilustracoes.html` | Folha de contato das 43 ilustrações (gerada, não editar à mão). |
+| `teste-ilustracoes.html` | Folha de contato das 45 ilustrações (gerada, não editar à mão). |
 | `ferramentas/` | Scripts Node que geram as ilustrações e os ícones. Não vão para o app. |
 
 ## Como mexer
@@ -41,7 +41,9 @@ com um mês de dados fictícios: `node ferramentas/mkexemplo.js` (fica em
 dentro de cada grupamento, os padrões de movimento são diferentes (dobradiça,
 flexão de joelho, extensão de quadril, unilateral, abdução). Ao trocar
 exercício, manter essa regra. As três elevações laterais são exceção
-deliberada: deltoide lateral só tem um padrão.
+deliberada: deltoide lateral só tem um padrão. O core também: "Abdominal
+máquina" aparece duas vezes por programa, a pedido do usuário (a academia
+não tem gravitron nem os outros aparelhos; core é opcional).
 
 **Ordem dentro do dia**: compostos pesados primeiro (regra original do
 usuário); dos acessórios para baixo, agrupados por aparelho para não ficar

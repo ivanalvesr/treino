@@ -359,7 +359,25 @@ const EX = [
        femur2:92, shin2:90},
   iniEq: s => grip(s.ankle) + cable([[s.ankle[0],s.ankle[1]],[166,162]]),
   fimEq: s => grip(s.ankle) + cable([[s.ankle[0],s.ankle[1]],[166,162]]),
-  seta:[[112,180],[148,178],[158,142]] }
+  seta:[[112,180],[148,178],[158,142]] },
+
+/* ================= SUBSTITUTOS (banco reto e maquina de abdominal) ================= */
+{ id:'ex-supino-reto-halteres', title:'Supino reto com halteres', names:['Supino reto com halteres'],
+  face:[0,-1],
+  eq: ln([38,132],[130,132]) + ln([54,132],[54,182]) + ln([118,132],[118,182]) + CHAO,
+  ini:{hip:[110,120], torso:180, head:180, femur:35, shin:117, arm:112, fore:-76},
+  fim:{hip:[110,120], torso:180, head:180, femur:35, shin:117, arm:-80, fore:-85},
+  iniEq: s => db(s.hand,0), fimEq: s => db(s.hand,0),
+  seta:[[26,112],[16,84],[34,58]] },
+
+{ id:'ex-abdominal-maquina', title:'Abdominal máquina', names:['Abdominal máquina'],
+  face:-1,
+  eq: ln([72,142],[128,142]) + ln([134,50],[134,178]) + circ([134,124],5) + CHAO,
+  ini:{hip:[104,130], torso:-95, head:-98, femur:180, shin:95, arm:150, fore:20},
+  fim:{hip:[104,130], torso:-128, head:-132, femur:180, shin:95, arm:150, fore:20},
+  iniEq: s => pad([89,96],5) + ln([134,124],[92,99]),
+  fimEq: s => pad([73,110],-38) + ln([134,124],[77,113]),
+  seta:[[66,52],[44,66],[44,96]] }
 
 ];
 
